@@ -269,3 +269,7 @@ details.script .tools { margin: 6px 0; }
 .q4 a { container-type: inline-size; }
 .qt { font-size: 60cqw; line-height: 1; }
 .cat-tile span { font-size: 52px; line-height: 1; }
+
+/* ===== v4: Glo picture icons (instead of phone emoji) ===== */
+img.ico { width: 1.3em; height: 1.3em; vertical-align: middle; object-fit: contain; }
+.circle .disc img.ico { width: 1.3em; height: 1.3em; border-radius: 0; object-fit: contain; }
