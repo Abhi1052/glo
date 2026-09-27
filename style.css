@@ -259,3 +259,13 @@ details.script .tools { margin: 6px 0; }
 .promise p { font-size: 18px; font-style: italic; color: var(--amber); margin: 12px 0 0; }
 #nightlight { background: #000 url(glo-pointlight.webp) center / cover no-repeat; animation: fadeaway 120s linear forwards; }
 #nightlight .nl-dot { display: none; }
+
+/* ===== v4: bigger icons — each icon fills at least 60% of its box ===== */
+.circle .disc { font-size: 40px; line-height: 1; }
+.circles.small .disc { font-size: 32px; line-height: 1; }
+.thumb { font-size: 40px; line-height: 1; }
+.row .card .thumb { font-size: 62px; }
+.thumb.big { font-size: 96px; }
+.q4 a { container-type: inline-size; }
+.qt { font-size: 60cqw; line-height: 1; }
+.cat-tile span { font-size: 52px; line-height: 1; }
