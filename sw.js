@@ -1,6 +1,6 @@
 /* Glo service worker — keeps the app working offline. Bump VERSION on every release. */
-var VERSION = "glo-v2";
-var SHELL = ["./", "index.html", "style.css", "app.js", "data.json", "manifest.webmanifest", "icon-192.png", "icon-512.png"];
+var VERSION = "glo-v3";
+var SHELL = ["./", "index.html", "style.css", "app.js", "data.json", "manifest.webmanifest", "icon-192.webp", "icon-512.webp", "glo-face.webp", "glo-hero.webp"];
 
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(VERSION).then(function (c) { return c.addAll(SHELL); }).then(function () { return self.skipWaiting(); }));

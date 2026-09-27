@@ -237,3 +237,25 @@ details.script .tools { margin: 6px 0; }
 .cat-tile span { font-size: 34px; } .cat-tile b { font-size: 16px; line-height: 1.25; } .cat-tile i { font-style: normal; font-size: 12.5px; opacity: .8; }
 .cat-banner { border-radius: 18px; padding: 16px; display: flex; gap: 14px; align-items: center; margin-top: 10px; }
 .cat-banner > span { font-size: 40px; } .cat-banner h2 { margin: 0; font-size: 21px; line-height: 1.25; } .cat-banner p { margin: 2px 0 0; font-size: 14px; opacity: .85; }
+
+/* ===== real Glo pictures (v3) ===== */
+.avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; flex: none;
+  border: 2px solid rgba(244,185,90,.7); box-shadow: 0 0 16px 4px var(--amber-glow); }
+.circle .disc img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.banner.has-img { background-size: cover; background-position: right center; min-height: 150px; }
+.banner.has-img .b-ic { display: none; }
+.banner.has-img h2, .banner.has-img p { max-width: 62%; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
+.player.soon { background-size: cover; background-position: center; position: relative; align-content: end; padding-bottom: 14px; }
+.player.soon p { background: rgba(6,9,24,.75); color: var(--text); padding: 6px 14px; border-radius: 99px; }
+.end-img { width: 100%; max-width: 420px; border-radius: 18px; display: block; margin: 0 auto 16px; opacity: .85; }
+.sheet-img { width: 100%; border-radius: 16px; display: block; margin-bottom: 14px; aspect-ratio: 16 / 9; object-fit: cover; }
+.about-hero { width: 100%; aspect-ratio: 16 / 9; border-radius: 20px; background-size: cover; background-position: center; margin-top: 10px; }
+.about-p { font-size: 17px; line-height: 1.7; margin: 0 0 12px; }
+.about-img { width: 100%; border-radius: 18px; margin: 8px 0; }
+.friends { display: grid; gap: 10px; }
+.friend { display: flex; gap: 12px; align-items: flex-start; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
+.friend span { font-size: 28px; } .friend b { font-size: 16px; } .friend p { margin: 2px 0 0; color: var(--muted); font-size: 14.5px; }
+.promise { margin: 22px 0; text-align: center; } .promise img { width: 100%; border-radius: 18px; }
+.promise p { font-size: 18px; font-style: italic; color: var(--amber); margin: 12px 0 0; }
+#nightlight { background: #000 url(glo-pointlight.webp) center / cover no-repeat; animation: fadeaway 120s linear forwards; }
+#nightlight .nl-dot { display: none; }

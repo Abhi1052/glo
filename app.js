@@ -128,7 +128,7 @@
   function header() {
     var st = myStage();
     var who = (S.child && S.child.name ? esc(S.child.name) + " · " : "") + (st ? esc(L(stageObj(st).ages)) : "");
-    return '<header class="top"><a class="brand" href="#/home"><div class="glo big"></div><div><h1>Glo</h1><p>' + t("tagline") + "</p></div></a>" +
+    return '<header class="top"><a class="brand" href="#/home"><img class="avatar" src="glo-face.webp" alt="Glo"><div><h1>Glo</h1><p>' + t("tagline") + "</p></div></a>" +
       '<div class="top-r">' + (who ? '<button class="who" data-act="settings">' + who + "</button>" : "") +
       '<button class="lang-btn" data-act="settings">🌐 ' + esc(D.languages.filter(function (l) { return l.code === lang(); })[0].label) + "</button></div></header>" +
       '<a class="searchbar" href="#/search">🔍 <span>' + t("search") + "</span></a>";
@@ -138,10 +138,10 @@
   function pageHome() {
     var st = myStage();
     var circles = '<nav class="circles">' +
-      (st ? circle("#/age/" + st, "⭐", S.child && S.child.name ? t("forName", { name: S.child.name }) : t("forAge", { ages: L(stageObj(st).ages) }), "c-star") : "") +
+      (st ? circle("#/age/" + st, '<img src="glo-face.webp" alt="">', S.child && S.child.name ? t("forName", { name: S.child.name }) : t("forAge", { ages: L(stageObj(st).ages) }), "c-star") : "") +
       D.categories.map(function (c) { return circle("#/c/" + c.id, c.icon, L(c.name), "c-" + c.id); }).join("") + "</nav>";
     var banners = '<div class="banners" id="banners">' + D.banners.map(function (b) {
-      return '<a class="banner b-' + b.id + '" href="' + b.link + '"><div class="b-ic">' + b.icon + "</div><div><h2>" + esc(L(b.title)) + "</h2><p>" + esc(L(b.text)) + "</p></div></a>";
+      return '<a class="banner b-' + b.id + (b.img ? " has-img" : "") + '" href="' + b.link + '"' + (b.img ? ' style="background-image:linear-gradient(90deg,rgba(6,9,24,.94) 38%,rgba(6,9,24,.35) 75%,rgba(6,9,24,.1)),url(' + b.img + ')"' : "") + '><div class="b-ic">' + b.icon + "</div><div><h2>" + esc(L(b.title)) + "</h2><p>" + esc(L(b.text)) + "</p></div></a>";
     }).join("") + '</div><div class="dots">' + D.banners.map(function (b, i) { return '<i class="' + (i === 0 ? "on" : "") + '"></i>'; }).join("") + "</div>";
     var quads = '<div class="quads">' + D.quads.map(function (q) {
       var c = cat(q.cat);
@@ -246,6 +246,18 @@
       }).join("") + "</ol>" + '<button class="pill ghost" data-act="settings">⚙️ ' + t("settings") + "</button>" + '<p class="foot">' + t("footer") + "</p>";
   }
 
+  /* ---------- MEET GLO (backstory) ---------- */
+  function pageAbout() {
+    var a = D.about;
+    return header() + '<div class="about-hero" style="background-image:url(glo-hero.webp)"></div>' +
+      '<h2 class="page-title">' + esc(L(a.title)) + "</h2>" + L(a.story).split("\n").map(function (p) { return '<p class="about-p">' + esc(p) + "</p>"; }).join("") +
+      '<img class="about-img" src="glo-comfort.webp" alt="">' +
+      '<h2 class="page-title">' + esc(L(a.friendsTitle)) + '</h2><div class="friends">' + a.friends.map(function (f) {
+        return '<div class="friend"><span>' + f.icon + "</span><div><b>" + esc(L(f.name)) + "</b><p>" + esc(L(f.about)) + "</p></div></div>";
+      }).join("") + "</div>" +
+      '<div class="promise"><img src="glo-sleepy.webp" alt=""><p>' + esc(L(a.promise)) + "</p></div>" + '<p class="foot">' + t("footer") + "</p>";
+  }
+
   /* ---------- STORY ---------- */
   function pageInfo(s) {
     var c = cat(s.category), tp = topic(s.category, s.topic);
@@ -259,7 +271,7 @@
     var b = D.bodies[s.id], parts = b.parts[lang()] || b.parts.en, c = cat(s.category);
     var vid = b.video && (b.video[lang()] || b.video.en);
     var player = vid ? '<video class="player" controls playsinline preload="none" src="' + esc(vid) + '"></video>'
-      : '<div class="player soon"><div class="glo big"></div><p>' + t("videoSoon") + "</p></div>";
+      : '<div class="player soon" style="background-image:url(glo-hero.webp)"><p>' + t("videoSoon") + "</p></div>";
     var body = parts.map(function (p) {
       return '<section class="part"><h2>' + esc(p.heading) + '</h2><div class="dir">(' + esc(p.direction) + ")</div>" +
         p.text.split("\n").map(function (l) { return "<p>" + esc(l) + "</p>"; }).join("") + "</section>";
@@ -270,14 +282,14 @@
       player + '<p class="small muted">🌙 ' + t("watchNote") + srcLinks([17, 6]) + "</p>" +
       '<div class="talk"><h3>💬 ' + t("talk") + "</h3><p>" + esc(L(b.talk)) + srcLinks([8, 14]) + "</p></div>" +
       '<details class="script"><summary>📜 ' + t("script") + '</summary><div class="tools"><button class="icon-btn" data-act="smaller">A−</button><button class="icon-btn" data-act="bigger">A+</button></div>' + body + "</details>" +
-      '<div class="end"><div class="glo"></div><p>' + t("endText") + '</p><button class="pill ghost" data-act="night">' + t("nightOn") + "</button></div></div>";
+      '<div class="end"><img class="end-img" src="glo-lying.webp" alt=""><p>' + t("endText") + '</p><button class="pill ghost" data-act="night">' + t("nightOn") + "</button></div></div>";
   }
 
   /* ---------- settings sheet ---------- */
   function openSettings(first) {
     var opts = '<option value="">—</option><option value="0">' + t("under1") + "</option>";
     for (var a = 1; a <= 10; a++) opts += '<option value="' + a + '">' + a + " " + (a === 1 ? t("year") : t("years")) + "</option>";
-    sheet.innerHTML = '<div class="sheet-card"><div class="glo big center"></div><h2>' + t("welcome") + "</h2><p>" + t("welcomeText") + "</p>" +
+    sheet.innerHTML = '<div class="sheet-card"><img class="sheet-img" src="glo-hero.webp" alt="Glo"><h2>' + t("welcome") + "</h2><p>" + t("welcomeText") + "</p>" +
       "<label>" + t("language") + '<select id="f-lang">' + D.languages.map(function (l) {
         return '<option value="' + l.code + '"' + (l.ready ? "" : " disabled") + (l.code === lang() ? " selected" : "") + ">" + esc(l.label) + (l.ready ? "" : " (" + t("langSoon") + ")") + "</option>";
       }).join("") + "</select></label>" +
@@ -379,6 +391,7 @@
     else if (h.indexOf("#/search") === 0) { html = pageSearch(); tab = "search"; }
     else if (h.indexOf("#/favs") === 0) { html = pageFavs(); tab = "favs"; }
     else if (h.indexOf("#/parents") === 0) { html = pageParents(); tab = "parents"; }
+    else if (h.indexOf("#/about") === 0) { html = pageAbout(); tab = "home"; }
     else html = pageHome();
     app.innerHTML = '<div class="wrap">' + html + "</div>";
     nav.innerHTML = [["home", "🏠", t("home")], ["cats", "🗂️", t("categories")], ["search", "🔍", t("searchTab")], ["favs", "♥", t("favs")], ["parents", "🔬", t("parents")]]
