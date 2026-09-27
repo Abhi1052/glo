@@ -1,6 +1,6 @@
 /* Glo service worker — keeps the app working offline. Bump VERSION on every release. */
-var VERSION = "glo-v1";
-var SHELL = ["./", "index.html", "style.css", "app.js", "stories.json", "manifest.webmanifest", "icon-192.png", "icon-512.png"];
+var VERSION = "glo-v2";
+var SHELL = ["./", "index.html", "style.css", "app.js", "data.json", "manifest.webmanifest", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(VERSION).then(function (c) { return c.addAll(SHELL); }).then(function () { return self.skipWaiting(); }));
@@ -19,7 +19,7 @@ self.addEventListener("fetch", function (e) {
   if (req.method !== "GET") return;
   var url = new URL(req.url);
   // Story list and pages: try the network first so updates show up, fall back to the saved copy offline.
-  if (url.origin === location.origin && (url.pathname.endsWith("stories.json") || req.mode === "navigate")) {
+  if (url.origin === location.origin && (url.pathname.endsWith("data.json") || req.mode === "navigate")) {
     e.respondWith(
       fetch(req).then(function (res) {
         var copy = res.clone();

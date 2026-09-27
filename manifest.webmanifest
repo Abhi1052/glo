@@ -1,16 +1,26 @@
 {
-  "name": "ग्लो — सोने से पहले की कहानियाँ",
-  "short_name": "ग्लो",
-  "description": "हर रात लौट आने वाली रोशनी — बच्चों के लिए सोने से पहले की कहानियाँ।",
-  "lang": "hi",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#0b1026",
-  "theme_color": "#0b1026",
-  "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
-  ]
+ "name": "Glo — Bedtime stories",
+ "short_name": "Glo",
+ "description": "Science-backed bedtime stories for every age, told by Glo the firefly.",
+ "lang": "en",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#0b1026",
+ "theme_color": "#0b1026",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any maskable"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  }
+ ]
 }
