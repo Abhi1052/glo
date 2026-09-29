@@ -91,7 +91,7 @@ header.top > .top-r { justify-self: end; }
 
 /* top bar: equal gaps between ☰, Chamku's picture, the name and the language button */
 header.top { display: flex; justify-content: space-between; align-items: center; gap: 0; }
-header.top > .brand { display: contents; }
+header.top > .brand { display: flex; align-items: center; gap: 8px; margin: 0; }   /* picture + name = one unit */
 header.top > .brand h1 { margin: 0; }
 
 /* ---------- science behind each story ---------- */
