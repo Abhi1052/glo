@@ -134,8 +134,7 @@
   function header() {
     var st = myStage();
     var who = (S.child && S.child.name ? esc(S.child.name) + " · " : "") + (st ? esc(L(stageObj(st).ages)) : "");
-    return '<header class="top"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button><div class="brand"><a href="#/home"><img class="avatar" src="glo-face.webp" alt="Chamku"></a><div><a href="#/home"><h1>Chamku</h1></a>' +
-      '<button class="kid-line" data-act="settings">' + (who || "+ " + t("addChild")) + "</button></div></div>" +
+    return '<header class="top"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button><a class="brand" href="#/home"><img class="avatar" src="glo-face.webp" alt="Chamku"><h1>Chamku</h1></a>' +
       '<div class="top-r">' +
       '<button class="lang-btn" data-act="langtoggle">🌐 ' + esc(D.languages.filter(function (l) { return l.code === lang(); })[0].label) + "</button>" +
       '</div></header>';
