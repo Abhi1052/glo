@@ -1,4 +1,4 @@
-/* Glo — bedtime stories web app (beta v2, store-style layout). Plain JS, no build step. */
+/* Chamku — bedtime stories web app (beta v2, store-style layout). Plain JS, no build step. */
 (function () {
   "use strict";
 
@@ -13,47 +13,47 @@
   var T = {
     en: {
       tagline: "The light that comes back every night", search: "Search stories, habits, feelings…",
-      welcome: "Welcome to Glo", welcomeText: "Every night, Glo the firefly visits with a story made for your child's age.",
+      welcome: "Welcome to Chamku", welcomeText: "Every night, Chamku the firefly visits with a story made for your child's age.",
       language: "Language", childName: "Child's name (optional)", age: "Age", under1: "Under 1", year: "year", years: "years",
       begin: "Let's begin", skip: "Skip for now", privacy: "This stays on your phone only. No ads, no tracking.",
       forName: "For {name}", forAge: "For {ages}", pickedFor: "Picked for {ages}", allAges: "All ages", all: "All",
-      soon: "Coming soon", readyNow: "Ready", start: "▶ Watch", min: "min",
+      fbTitle: "Tell us how it went (for our test)", fbLike: "Did your child like it?", fbL1: "😍 Loved it", fbL2: "🙂 It was OK", fbL3: "😐 Not really", fbGot: "Did they understand the story?", fbG1: "✅ Yes", fbG2: "🤔 A little", fbG3: "❌ No", fbAge: "Child's age", fbNote: "Anything they said or did? (optional)", fbSend: "Send feedback on WhatsApp", fbPick: "Please pick an answer for both questions.", soon: "Coming soon", readyNow: "Ready", start: "▶ Watch", min: "min",
       builds: "Builds", why: "Why this helps", sources: "Sources", sample: "Meanwhile, watch our sample story",
       back: "← Back", talk: "Talk together",
-      watchNote: "Glo tells this story. He says hello, then shrinks to a tiny light, and the screen stays almost dark for the rest of the story — so it helps your child sleep instead of waking them up.",
-      videoSoon: "Glo's video for this story is being made.", script: "Read the story script (for testing)",
+      watchNote: "Chamku tells this story. He says hello, then shrinks to a tiny light, and the screen stays almost dark for the rest of the story — so it helps your child sleep instead of waking them up.",
+      videoSoon: "Chamku's video for this story is being made.", script: "Read the story script (for testing)",
       endText: "The end... time to sleep.", nightOn: "🌙 Turn on the night light", goodnight: "Goodnight...", goBack: "Go back",
       childAt: "Your child at {ages}", now: "What's happening now", works: "Stories that work now",
-      sleepH: "Sleep", screens: "Screens", tryTonight: "Try tonight", promises: "How Glo is built",
+      sleepH: "Sleep", screens: "Screens", tryTonight: "Try tonight", promises: "How Chamku is built",
       shelves: "The science behind each category", favs: "Saved", noFavs: "Tap ♥ on any story to save it here.",
       later: "Stories for this age are coming later.", langSoon: "coming soon", settings: "Child & language",
-      babyNote: "Doctors advise no screens for babies. Play Glo with the phone face down, so your baby hears only Glo's voice.",
+      babyNote: "Doctors advise no screens for babies. Play Chamku with the phone face down, so your baby hears only Chamku's voice.",
       routine: "Tonight's routine", routineSteps: "Bath · Book · Brush · Bed", routineWhy: "The same 4 steps every night helps children fall asleep faster.",
-      footer: "Glo beta · for friends and family · stories are being written",
-      home: "Home", categories: "Categories", searchTab: "Search", parents: "Parents",
+      footer: "Chamku beta · for friends and family · stories are being written",
+      home: "Home", categories: "Categories", searchTab: "Search", parents: "Parents", ask: "Ask Chamku", askCta: "Ask Chamku", askCtaSub: "Your parenting questions, answered from child science — with links to the evidence. Free.",
       byAge: "Stories by age", seeAll: "See all", showMore: "Show more", stories: "stories", noResults: "No stories found. Try another word.",
       allCats: "All categories", results: "{n} stories", calmNow: "Calm & sleepy picks", classicsRow: "Classic tales"
     },
     hi: {
       tagline: "हर रात लौट आने वाली रोशनी", search: "कहानी, आदत, भावना खोजें…",
-      welcome: "ग्लो में आपका स्वागत है", welcomeText: "हर रात जुगनू ग्लो आता है — आपके बच्चे की उम्र के हिसाब से एक कहानी लेकर।",
+      welcome: "चमकू में आपका स्वागत है", welcomeText: "हर रात जुगनू चमकू आता है — आपके बच्चे की उम्र के हिसाब से एक कहानी लेकर।",
       language: "भाषा", childName: "बच्चे का नाम (अगर चाहें)", age: "उम्र", under1: "1 साल से कम", year: "साल", years: "साल",
       begin: "चलिए शुरू करें", skip: "अभी छोड़ें", privacy: "ये सिर्फ़ आपके फ़ोन पर रहता है। कोई विज्ञापन नहीं, कोई ट्रैकिंग नहीं।",
       forName: "{name} के लिए", forAge: "{ages} के लिए", pickedFor: "{ages} के लिए चुनी गईं", allAges: "सभी उम्र", all: "सब",
-      soon: "जल्द आ रही है", readyNow: "तैयार", start: "▶ देखें", min: "मिनट",
+      fbTitle: "बताइए कैसी लगी (हमारे टेस्ट के लिए)", fbLike: "बच्चे को कहानी पसंद आई?", fbL1: "😍 बहुत पसंद आई", fbL2: "🙂 ठीक थी", fbL3: "😐 ज़्यादा नहीं", fbGot: "क्या बच्चा कहानी समझ पाया?", fbG1: "✅ हाँ", fbG2: "🤔 थोड़ा-सा", fbG3: "❌ नहीं", fbAge: "बच्चे की उम्र", fbNote: "बच्चे ने कुछ कहा या किया? (अगर चाहें)", fbSend: "WhatsApp पर feedback भेजें", fbPick: "कृपया दोनों सवालों का जवाब चुनिए।", soon: "जल्द आ रही है", readyNow: "तैयार", start: "▶ देखें", min: "मिनट",
       builds: "क्या सिखाती है", why: "ये क्यों मदद करता है", sources: "स्रोत", sample: "तब तक हमारी नमूना कहानी देखिए",
       back: "← वापस", talk: "साथ में बात करें",
-      watchNote: "ये कहानी ग्लो सुनाता है। वो नमस्ते कहता है, फिर एक नन्ही-सी रोशनी बन जाता है, और बाकी कहानी में स्क्रीन लगभग अँधेरी रहती है — ताकि बच्चा जागे नहीं, सो जाए।",
-      videoSoon: "इस कहानी का ग्लो वाला वीडियो बन रहा है।", script: "कहानी की स्क्रिप्ट पढ़ें (टेस्टिंग के लिए)",
+      watchNote: "ये कहानी चमकू सुनाता है। वो नमस्ते कहता है, फिर एक नन्ही-सी रोशनी बन जाता है, और बाकी कहानी में स्क्रीन लगभग अँधेरी रहती है — ताकि बच्चा जागे नहीं, सो जाए।",
+      videoSoon: "इस कहानी का चमकू वाला वीडियो बन रहा है।", script: "कहानी की स्क्रिप्ट पढ़ें (टेस्टिंग के लिए)",
       endText: "कहानी ख़त्म... अब सोने का समय।", nightOn: "🌙 रात की रोशनी चालू करें", goodnight: "गुड नाइट...", goBack: "वापस जाएँ",
       childAt: "{ages} में आपका बच्चा", now: "अभी क्या हो रहा है", works: "अभी कैसी कहानियाँ काम करती हैं",
-      sleepH: "नींद", screens: "स्क्रीन", tryTonight: "आज रात आज़माइए", promises: "ग्लो कैसे बना है",
+      sleepH: "नींद", screens: "स्क्रीन", tryTonight: "आज रात आज़माइए", promises: "चमकू कैसे बना है",
       shelves: "हर श्रेणी के पीछे का विज्ञान", favs: "सेव की गईं", noFavs: "किसी भी कहानी पर ♥ दबाइए, वो यहाँ दिखेगी।",
       later: "इस उम्र की कहानियाँ बाद में आएँगी।", langSoon: "जल्द", settings: "बच्चा और भाषा",
-      babyNote: "डॉक्टर छोटे बच्चों के लिए स्क्रीन मना करते हैं। फ़ोन उल्टा रखकर ग्लो चलाइए, ताकि बच्चा सिर्फ़ ग्लो की आवाज़ सुने।",
+      babyNote: "डॉक्टर छोटे बच्चों के लिए स्क्रीन मना करते हैं। फ़ोन उल्टा रखकर चमकू चलाइए, ताकि बच्चा सिर्फ़ चमकू की आवाज़ सुने।",
       routine: "आज रात का रूटीन", routineSteps: "नहाना · कहानी · ब्रश · बिस्तर", routineWhy: "हर रात वही 4 काम करने से बच्चे जल्दी सो जाते हैं।",
-      footer: "ग्लो बीटा · दोस्तों और परिवार के लिए · कहानियाँ लिखी जा रही हैं",
-      home: "होम", categories: "श्रेणियाँ", searchTab: "खोजें", parents: "माता-पिता",
+      footer: "चमकू बीटा · दोस्तों और परिवार के लिए · कहानियाँ लिखी जा रही हैं",
+      home: "होम", categories: "श्रेणियाँ", searchTab: "खोजें", parents: "माता-पिता", ask: "चमकू से पूछें", askCta: "चमकू से पूछिए", askCtaSub: "आपके parenting सवाल, child science से जवाब — सबूत के links के साथ। बिल्कुल free।",
       byAge: "उम्र के हिसाब से", seeAll: "सब देखें", showMore: "और दिखाएँ", stories: "कहानियाँ", noResults: "कोई कहानी नहीं मिली। कोई और शब्द आज़माइए।",
       allCats: "सारी श्रेणियाँ", results: "{n} कहानियाँ", calmNow: "शांत और नींद वाली कहानियाँ", classicsRow: "पुरानी कहानियाँ"
     }
@@ -128,7 +128,7 @@
   function header() {
     var st = myStage();
     var who = (S.child && S.child.name ? esc(S.child.name) + " · " : "") + (st ? esc(L(stageObj(st).ages)) : "");
-    return '<header class="top"><a class="brand" href="#/home"><img class="avatar" src="glo-face.webp" alt="Glo"><div><h1>Glo</h1><p>' + t("tagline") + "</p></div></a>" +
+    return '<header class="top"><a class="brand" href="#/home"><img class="avatar" src="glo-face.webp" alt="Chamku"><div><h1>Chamku</h1><p>' + t("tagline") + "</p></div></a>" +
       '<div class="top-r">' + (who ? '<button class="who" data-act="settings">' + who + "</button>" : "") +
       '<button class="lang-btn" data-act="settings">🌐 ' + esc(D.languages.filter(function (l) { return l.code === lang(); })[0].label) + "</button></div></header>" +
       '<a class="searchbar" href="#/search">🔍 <span>' + t("search") + "</span></a>";
@@ -230,13 +230,15 @@
   function pageParents() {
     var sel = S.parentStage || myStage() || "s3", st = stageObj(sel);
     function li(items) { return "<ul>" + items.map(function (g) { return "<li>" + esc(L(g)) + srcLinks(g.src) + "</li>"; }).join("") + "</ul>"; }
-    return header() + '<h2 class="page-title">' + t("childAt", { ages: esc(L(st.ages)) }) + "</h2>" +
+    return header() + '<a class="ask-cta" href="#/ask"><img src="glo-face.webp" alt=""><div><b>💬 ' + t("askCta") + '</b><span>' + t("askCtaSub") + '</span></div></a>' +
+      '<h2 class="page-title">' + t("childAt", { ages: esc(L(st.ages)) }) + "</h2>" +
       '<nav class="chips">' + D.stages.map(function (s) { return '<button class="chip" data-stage="' + s.id + '" aria-pressed="' + (s.id === sel) + '">' + esc(L(s.ages)) + "</button>"; }).join("") + "</nav>" +
       '<div class="guide"><div class="stage-name">' + esc(L(st.name)) + (st.later ? " · " + t("soon") : "") + "</div>" +
       "<h3>" + t("now") + "</h3>" + li(st.growing) + "<h3>" + t("works") + "</h3><p>" + esc(L(st.stories)) + srcLinks(st.stories.src) + "</p>" +
       '<div class="facts"><div><h4>😴 ' + t("sleepH") + "</h4><p>" + esc(L(st.sleep)) + srcLinks(st.sleep.src) + "</p></div>" +
       "<div><h4>📱 " + t("screens") + "</h4><p>" + esc(L(st.screens)) + srcLinks(st.screens.src) + "</p></div></div>" +
       '<div class="try"><h4>✨ ' + t("tryTonight") + "</h4><p>" + esc(L(st.tonight)) + srcLinks(st.tonight.src) + "</p></div></div>" +
+      '<div id="ak-stage" data-stage="' + sel + '"></div>' +
       '<h2 class="page-title">' + t("promises") + '</h2><ol class="promises">' + D.promises.map(function (p) { return "<li>" + esc(L(p)) + srcLinks(p.src) + "</li>"; }).join("") + "</ol>" +
       '<h2 class="page-title">' + t("shelves") + "</h2>" + D.categories.map(function (c) {
         return '<div class="sci"><h4>' + c.icon + " " + esc(L(c.name)) + "</h4><p>" + esc(L(c.why)) + srcLinks(c.why.src) + "</p></div>";
@@ -265,7 +267,18 @@
       '<div class="thumb big c-' + s.category + '"><span>' + (tp ? tp.icon : c.icon) + "</span></div>" +
       '<div class="story-head"><h1>' + esc(L(s.title)) + '</h1><div class="meta">' + esc(L(c.name)) + (tp ? " · " + esc(L(tp.name)) : "") + " · " + esc(agesOf(s)) + '</div><span class="badge">' + t("soon") + "</span></div>" +
       '<div class="guide"><h3>' + t("builds") + "</h3><p>" + esc(L(s.builds)) + "</p><h3>" + t("why") + "</h3><p>" + esc(L(c.why)) + srcLinks(c.why.src) + "</p></div>" +
-      '<a class="pill" href="#/s/doves">' + t("sample") + " →</a>";
+      '<a class="pill" href="#/s/anaya-brushu">' + t("sample") + " →</a>";
+  }
+
+  function feedback(s) {
+    function btns(k, keys) { return '<div class="fb-opts">' + keys.map(function (x, i) { return '<button type="button" class="pill ghost fb" data-act="fb" data-k="' + k + '" data-v="' + (i + 1) + '">' + t(x) + "</button>"; }).join("") + "</div>"; }
+    var ages = '<option value="">—</option>'; for (var a = 1; a <= 10; a++) ages += '<option value="' + a + '"' + (S.child && S.child.age === a ? " selected" : "") + ">" + a + "</option>";
+    return '<div class="talk fbbox" data-id="' + s.id + '"><h3>📝 ' + t("fbTitle") + "</h3>" +
+      "<p><b>" + t("fbLike") + "</b></p>" + btns("like", ["fbL1", "fbL2", "fbL3"]) +
+      "<p><b>" + t("fbGot") + "</b></p>" + btns("got", ["fbG1", "fbG2", "fbG3"]) +
+      "<p><b>" + t("fbAge") + '</b> <select id="fb-age">' + ages + "</select></p>" +
+      '<p><b>' + t("fbNote") + '</b></p><textarea id="fb-note" rows="3" maxlength="400" style="width:100%;border-radius:12px;padding:10px;font:inherit"></textarea>' +
+      '<p id="fb-msg" class="small muted"></p><button type="button" class="pill wide" data-act="fbsend">' + t("fbSend") + "</button></div>";
   }
   function pageStory(s) {
     var b = D.bodies[s.id], parts = b.parts[lang()] || b.parts.en, c = cat(s.category);
@@ -281,7 +294,7 @@
       '<div class="story-head"><h1>' + esc(L(s.title)) + '</h1><div class="meta">' + esc(L(b.source)) + " · " + esc(agesOf(s)) + " · " + s.minutes + " " + t("min") + "</div></div>" +
       player + '<p class="small muted">🌙 ' + t("watchNote") + srcLinks([17, 6]) + "</p>" +
       '<div class="talk"><h3>💬 ' + t("talk") + "</h3><p>" + esc(L(b.talk)) + srcLinks([8, 14]) + "</p></div>" +
-      '<details class="script"><summary>📜 ' + t("script") + '</summary><div class="tools"><button class="icon-btn" data-act="smaller">A−</button><button class="icon-btn" data-act="bigger">A+</button></div>' + body + "</details>" +
+      '<details class="script"><summary>📜 ' + t("script") + '</summary><div class="tools"><button class="icon-btn" data-act="smaller">A−</button><button class="icon-btn" data-act="bigger">A+</button></div>' + body + "</details>" + feedback(s) +
       '<div class="end"><img class="end-img" src="glo-lying.webp" alt=""><p>' + t("endText") + '</p><button class="pill ghost" data-act="night">' + t("nightOn") + "</button></div></div>";
   }
 
@@ -289,7 +302,7 @@
   function openSettings(first) {
     var opts = '<option value="">—</option><option value="0">' + t("under1") + "</option>";
     for (var a = 1; a <= 10; a++) opts += '<option value="' + a + '">' + a + " " + (a === 1 ? t("year") : t("years")) + "</option>";
-    sheet.innerHTML = '<div class="sheet-card"><img class="sheet-img" src="glo-hero.webp" alt="Glo"><h2>' + t("welcome") + "</h2><p>" + t("welcomeText") + "</p>" +
+    sheet.innerHTML = '<div class="sheet-card"><img class="sheet-img" src="glo-hero.webp" alt="Chamku"><h2>' + t("welcome") + "</h2><p>" + t("welcomeText") + "</p>" +
       "<label>" + t("language") + '<select id="f-lang">' + D.languages.map(function (l) {
         return '<option value="' + l.code + '"' + (l.ready ? "" : " disabled") + (l.code === lang() ? " selected" : "") + ">" + esc(l.label) + (l.ready ? "" : " (" + t("langSoon") + ")") + "</option>";
       }).join("") + "</select></label>" +
@@ -353,6 +366,19 @@
     if (act === "settings") openSettings(false);
     else if (act === "night") openNight();
     else if (act === "more") { S.shown += PAGE; render(true); }
+    else if (act === "fb") {
+      var box = b.closest(".fbbox"); box.querySelectorAll('[data-k="' + b.getAttribute("data-k") + '"]').forEach(function (x) { x.classList.remove("on"); x.style.background = ""; });
+      b.classList.add("on"); b.style.background = "rgba(255,200,90,.35)";
+    } else if (act === "fbsend") {
+      var bx = b.closest(".fbbox"), sid = bx.getAttribute("data-id"), st = story(sid);
+      var lk = bx.querySelector('.on[data-k="like"]'), gt = bx.querySelector('.on[data-k="got"]');
+      if (!lk || !gt) { bx.querySelector("#fb-msg").textContent = t("fbPick"); return; }
+      var ag = bx.querySelector("#fb-age").value, nt = bx.querySelector("#fb-note").value.trim();
+      var msg = "Chamku test feedback\nStory: " + st.title.en + " (" + st.title.hi + ")\nLiked: " + lk.textContent + "\nUnderstood: " + gt.textContent +
+        "\nChild's age: " + (ag || "-") + (nt ? "\nNote: " + nt : "");
+      window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+    }
+
     else if (act === "fav") {
       var id = b.getAttribute("data-id");
       S.favs = isFav(id) ? S.favs.filter(function (x) { return x !== id; }) : S.favs.concat([id]);
@@ -383,7 +409,7 @@
       var s = story(m[1]); if (!s) { location.hash = "#/home"; return; }
       nav.hidden = true;
       app.innerHTML = '<div class="wrap">' + (s.ready && D.bodies[s.id] ? pageStory(s) : pageInfo(s)) + "</div>";
-      document.title = L(s.title) + " — Glo"; window.scrollTo(0, 0); return;
+      document.title = L(s.title) + " — Chamku"; window.scrollTo(0, 0); return;
     }
     if ((m = h.match(/^#\/c\/(\w+)(?:\/(\w+))?/))) { html = pageCat(m[1], m[2]); tab = "cats"; }
     else if ((m = h.match(/^#\/age\/(\w+)/))) { html = pageAge(m[1]); tab = "home"; }
@@ -391,21 +417,28 @@
     else if (h.indexOf("#/search") === 0) { html = pageSearch(); tab = "search"; }
     else if (h.indexOf("#/favs") === 0) { html = pageFavs(); tab = "favs"; }
     else if (h.indexOf("#/parents") === 0) { html = pageParents(); tab = "parents"; }
+    else if (h.indexOf("#/ask") === 0) { html = '<div id="ask-root"></div>'; tab = "ask"; }
     else if (h.indexOf("#/about") === 0) { html = pageAbout(); tab = "home"; }
     else html = pageHome();
     app.innerHTML = '<div class="wrap">' + html + "</div>";
-    nav.innerHTML = [["home", "🏠", t("home")], ["cats", "🗂️", t("categories")], ["search", "🔍", t("searchTab")], ["favs", "♥", t("favs")], ["parents", "🔬", t("parents")]]
+    nav.innerHTML = [["home", "🏠", t("home")], ["cats", "🗂️", t("categories")], ["search", "🔍", t("searchTab")], ["ask", "💬", t("ask")], ["parents", "🔬", t("parents")]]
       .map(function (x) { return '<a href="#/' + x[0] + '" class="' + (x[0] === tab ? "on" : "") + '"><span>' + x[1] + "</span>" + esc(x[2]) + "</a>"; }).join("");
     nav.hidden = false;
-    document.title = "Glo — " + t("tagline");
+    document.title = "Chamku — " + t("tagline");
     if (!same) window.scrollTo(0, 0);
     if (tab === "search" && !same) { var q = document.getElementById("q"); if (q) q.focus(); }
     startBanners();
+    if (window.ChamkuAsk) {
+      var ar = document.getElementById("ask-root");
+      if (ar) window.ChamkuAsk.mount(ar, { lang: lang() });
+      var sg = document.getElementById("ak-stage");
+      if (sg) window.ChamkuAsk.load().then(function () { sg.innerHTML = window.ChamkuAsk.stageCard(sg.getAttribute("data-stage"), lang()); });
+    }
   }
 
   window.addEventListener("hashchange", function () { route(false); });
   fetch("data.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) {
     D = d; route(false); if (!S.lang || !S.child) openSettings(true);
-  }).catch(function () { app.innerHTML = '<div class="wrap"><p class="empty">Could not load Glo. Please check your internet and open again.</p></div>'; });
+  }).catch(function () { app.innerHTML = '<div class="wrap"><p class="empty">Could not load Chamku. Please check your internet and open again.</p></div>'; });
   if ("serviceWorker" in navigator) window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
 })();

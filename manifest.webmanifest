@@ -1,7 +1,7 @@
 {
- "name": "Glo — Bedtime stories",
- "short_name": "Glo",
- "description": "Science-backed bedtime stories for every age, told by Glo the firefly.",
+ "name": "Chamku — Bedtime stories",
+ "short_name": "Chamku",
+ "description": "Science-backed bedtime stories for every age, told by Chamku the firefly.",
  "lang": "en",
  "start_url": "./",
  "scope": "./",

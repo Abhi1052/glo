@@ -1,5 +1,5 @@
-/* Glo service worker — keeps the app working offline. Bump VERSION on every release. */
-var VERSION = "glo-v5";
+/* Chamku service worker — keeps the app working offline. Bump VERSION on every release. */
+var VERSION = "chamku-test-2";
 var SHELL = ["./", "index.html", "style.css", "app.js", "data.json", "manifest.webmanifest", "icon-192.webp", "icon-512.webp", "glo-face.webp", "glo-hero.webp"];
 
 self.addEventListener("install", function (e) {
@@ -17,6 +17,7 @@ self.addEventListener("activate", function (e) {
 self.addEventListener("fetch", function (e) {
   var req = e.request;
   if (req.method !== "GET") return;
+  if (/\.mp4($|\?)/.test(req.url)) return; // videos stream straight from the server
   var url = new URL(req.url);
   // Story list and pages: try the network first so updates show up, fall back to the saved copy offline.
   if (url.origin === location.origin && (url.pathname.endsWith("data.json") || req.mode === "navigate")) {
