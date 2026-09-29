@@ -494,6 +494,7 @@
     else if (h.indexOf("#/favs") === 0) { html = pageFavs(); tab = "favs"; }
     else if (h.indexOf("#/parents") === 0) { html = pageParents(); tab = "parents"; }
     else if (h.indexOf("#/report") === 0) { html = '<h1 class="page-title">Story report</h1><div id="ca-report">Loading…</div>'; tab = "home"; }
+    else if (h.indexOf("#/science") === 0) { html = header() + '<h1 class="page-title">🔬 ' + (lang() === "hi" ? "विज्ञान लाइब्रेरी" : "Science library") + '</h1><div id="sci-lib">Loading…</div>'; tab = "parents"; }
     else if (h.indexOf("#/ask") === 0) { html = '<div id="ask-root"></div>'; tab = "ask"; }
     else if (h.indexOf("#/about") === 0) { html = pageAbout(); tab = "home"; }
     else html = pageHome();
