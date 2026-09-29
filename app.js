@@ -15,7 +15,7 @@
       tagline: "The light that comes back every night", search: "Search stories, habits, feelings…",
       welcome: "Welcome to Chamku", welcomeText: "Every night, Chamku the firefly visits with a story made for your child's age.",
       language: "Language", childName: "Child's name (optional)", age: "Age", under1: "Under 1", year: "year", years: "years",
-      begin: "Let's begin", skip: "Skip for now", privacy: "This stays on your phone only. No ads, no tracking.",
+      begin: "Let's begin", skip: "Skip for now", privacy: "Your child's name and age stay on this phone only. No ads.",
       forName: "For {name}", forAge: "For {ages}", pickedFor: "Picked for {ages}", allAges: "All ages", all: "All",
       fbTitle: "How did your child find this story?", fbGot: "How well did your child understand the story?", fbGotLo: "1 = not at all", fbGotHi: "10 = fully", fbInt: "How interested was your child, from start to end?", fbIntLo: "1 = lost interest early", fbIntHi: "10 = hooked till the end", fbSend: "Submit", fbDone: "Sent", fbThanks: "Thank you! Your answer has been sent.", fbFail: "Could not send right now. We will try again automatically.", fbPick: "Please tap a number for both questions.", soon: "Coming soon", readyNow: "Ready", start: "▶ Watch", min: "min",
       builds: "Builds", why: "Why this helps", sources: "Sources", sample: "Meanwhile, watch our sample story",
@@ -38,7 +38,7 @@
       tagline: "हर रात लौट आने वाली रोशनी", search: "कहानी, आदत, भावना खोजें…",
       welcome: "चमकू में आपका स्वागत है", welcomeText: "हर रात जुगनू चमकू आता है — आपके बच्चे की उम्र के हिसाब से एक कहानी लेकर।",
       language: "भाषा", childName: "बच्चे का नाम (अगर चाहें)", age: "उम्र", under1: "1 साल से कम", year: "साल", years: "साल",
-      begin: "चलिए शुरू करें", skip: "अभी छोड़ें", privacy: "ये सिर्फ़ आपके फ़ोन पर रहता है। कोई विज्ञापन नहीं, कोई ट्रैकिंग नहीं।",
+      begin: "चलिए शुरू करें", skip: "अभी छोड़ें", privacy: "बच्चे का नाम और उम्र सिर्फ़ इसी फ़ोन पर रहते हैं। कोई विज्ञापन नहीं।",
       forName: "{name} के लिए", forAge: "{ages} के लिए", pickedFor: "{ages} के लिए चुनी गईं", allAges: "सभी उम्र", all: "सब",
       fbTitle: "बच्चे को ये कहानी कैसी लगी?", fbGot: "बच्चे को कहानी कितनी समझ आई?", fbGotLo: "1 = बिल्कुल नहीं", fbGotHi: "10 = पूरी", fbInt: "शुरू से आख़िर तक बच्चे का मन कितना लगा रहा?", fbIntLo: "1 = जल्दी ऊब गया", fbIntHi: "10 = आख़िर तक मन लगा रहा", fbSend: "Submit करें", fbDone: "भेज दिया", fbThanks: "धन्यवाद! आपका जवाब भेज दिया गया है।", fbFail: "अभी नहीं भेज पाए। हम अपने आप फिर से कोशिश करेंगे।", fbPick: "कृपया दोनों सवालों के लिए एक number चुनिए।", soon: "जल्द आ रही है", readyNow: "तैयार", start: "▶ देखें", min: "मिनट",
       builds: "क्या सिखाती है", why: "ये क्यों मदद करता है", sources: "स्रोत", sample: "तब तक हमारी नमूना कहानी देखिए",
@@ -440,6 +440,7 @@
     else if (h.indexOf("#/search") === 0) { html = pageSearch(); tab = "search"; }
     else if (h.indexOf("#/favs") === 0) { html = pageFavs(); tab = "favs"; }
     else if (h.indexOf("#/parents") === 0) { html = pageParents(); tab = "parents"; }
+    else if (h.indexOf("#/report") === 0) { html = '<h1 class="page-title">Story report</h1><div id="ca-report">Loading…</div>'; tab = "home"; }
     else if (h.indexOf("#/ask") === 0) { html = '<div id="ask-root"></div>'; tab = "ask"; }
     else if (h.indexOf("#/about") === 0) { html = pageAbout(); tab = "home"; }
     else html = pageHome();

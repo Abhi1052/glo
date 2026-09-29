@@ -1,0 +1,18 @@
+/* Chamku sign-in sheet + story report */
+.ca-wrap { position: fixed; inset: 0; z-index: 60; background: rgba(3,5,14,.82); display: grid; place-items: end center; padding: 12px; }
+@media (min-width: 600px) { .ca-wrap { place-items: center; } }
+.ca-card { width: 100%; max-width: 440px; background: #121936; border: 1px solid var(--line); border-radius: 22px; padding: 20px 18px 14px; text-align: center; }
+.ca-card h2 { margin: 6px 0 4px; font-size: 22px; }
+.ca-card > p { color: var(--muted); margin: 4px 0 12px; }
+.ca-img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; }
+.ca-google { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.ca-gl { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #fff; color: #4285f4; font-weight: 800; font-family: Arial, sans-serif; }
+.ca-or { color: var(--muted); margin: 10px 0; font-size: 14px; }
+.ca-card input { display: block; width: 100%; margin: 0 0 8px; padding: 11px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 16px; }
+.ca-card .small { margin: 8px 0 0; }
+.ca-card a { color: inherit; }
+.ca-who { margin: 6px 0 0; }
+.ca-who .link { padding: 0; font-size: inherit; }
+.ca-table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.ca-table th, .ca-table td { border-bottom: 1px solid var(--line); padding: 7px 6px; text-align: left; white-space: nowrap; }
+.ca-table td:first-child { white-space: normal; min-width: 140px; }

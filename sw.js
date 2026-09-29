@@ -1,5 +1,5 @@
 /* Chamku service worker — keeps the app working offline. Bump VERSION on every release. */
-var VERSION = "chamku-09290954";
+var VERSION = "chamku-09291041";
 var SHELL = ["./", "index.html", "style.css", "app.js", "data.json", "manifest.webmanifest", "icon-192.webp", "icon-512.webp", "glo-face.webp", "glo-hero.webp"];
 
 self.addEventListener("install", function (e) {
@@ -19,6 +19,7 @@ self.addEventListener("fetch", function (e) {
   if (req.method !== "GET") return;
   if (/\.mp4($|\?)/.test(req.url)) return; // videos stream straight from the server
   var url = new URL(req.url);
+  if (url.origin !== location.origin && !/fonts\.(googleapis|gstatic)\.com$/.test(url.hostname)) return; // login, database and SDK go straight to the network
   // Story list and pages: try the network first so updates show up, fall back to the saved copy offline.
   if (url.origin === location.origin && (url.pathname.endsWith("data.json") || req.mode === "navigate")) {
     e.respondWith(
