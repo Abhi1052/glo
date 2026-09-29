@@ -23,6 +23,7 @@
     ready = load(SDK + "firebase-app-compat.js")
       .then(function () { return Promise.all([load(SDK + "firebase-auth-compat.js"), load(SDK + "firebase-firestore-compat.js")]); })
       .then(function () {
+        if (CFG.googleClientId) load("https://accounts.google.com/gsi/client").catch(function () {});
         firebase.initializeApp(CFG.firebase);
         auth = firebase.auth(); db = firebase.firestore();
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function () {});
@@ -61,6 +62,7 @@
     box.innerHTML = '<div class="ca-card" role="dialog" aria-modal="true"><img src="glo-face.webp" alt="" class="ca-img">' +
       "<h2>" + T("Sign in once to listen", "सुनने के लिए एक बार sign in करें") + "</h2>" +
       "<p>" + T("It's free while we are testing. You stay signed in on this phone.", "Testing के दौरान बिल्कुल free। इस फ़ोन पर आप signed in रहेंगे।") + "</p>" +
+      '<div id="ca-gbtn" class="ca-gbtn"></div>' +
       '<button class="pill wide ca-google" id="ca-g"><span class="ca-gl">G</span> ' + T("Continue with Google", "Google से आगे बढ़ें") + "</button>" +
       '<div class="ca-or">' + T("or", "या") + "</div>" +
       '<input id="ca-em" type="email" inputmode="email" autocomplete="email" placeholder="' + T("Your email", "आपका email") + '">' +
@@ -73,6 +75,8 @@
     document.body.appendChild(box);
     box.querySelector("#ca-x").onclick = closeSheet;
     box.addEventListener("click", function (e) { if (e.target === box) closeSheet(); });
+    // Preferred: Google's own sign-in button (works on phones where the Firebase popup/redirect is blocked)
+    gisButton(box.querySelector("#ca-gbtn"), box.querySelector("#ca-g"));
     box.querySelector("#ca-g").onclick = function () {
       toast("…");
       var p = new firebase.auth.GoogleAuthProvider(); p.setCustomParameters({ prompt: "select_account" });
@@ -94,6 +98,23 @@
     };
   }
 
+  var gisReady = false;
+  function onGoogleCredential(resp) {
+    toast("…");
+    auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(resp.credential)).catch(function (e) {
+      toast(T("Could not sign in. Please try again.", "Sign in नहीं हो पाया। कृपया फिर से कोशिश करें।") + (e && e.code ? " (" + e.code + ")" : ""));
+    });
+  }
+  function gisButton(holder, fallback, tries) {
+    tries = tries || 0;
+    var g = window.google && google.accounts && google.accounts.id;
+    if (!g || !CFG.googleClientId) { if (tries < 20) setTimeout(function () { gisButton(holder, fallback, tries + 1); }, 150); return; }
+    if (!gisReady) { g.initialize({ client_id: CFG.googleClientId, callback: onGoogleCredential, ux_mode: "popup", auto_select: false, context: "signin" }); gisReady = true; }
+    holder.innerHTML = "";
+    g.renderButton(holder, { type: "standard", theme: "filled_blue", size: "large", text: "continue_with", shape: "pill", logo_alignment: "left", width: Math.min(320, (holder.clientWidth || 300)) });
+    if (fallback) fallback.style.display = "none";
+  }
+
   // signed-in line under the story player
   function paintBadge() {
     document.querySelectorAll(".ca-who").forEach(function (el) { el.remove(); });
@@ -101,7 +122,7 @@
     document.querySelectorAll("video.player").forEach(function (v) {
       var p = document.createElement("p"); p.className = "ca-who small muted";
       p.innerHTML = "👤 " + (user.email || user.displayName || "") + ' · <button class="link" type="button">' + T("Sign out", "Sign out") + "</button>";
-      p.querySelector("button").onclick = function () { auth.signOut(); };
+      p.querySelector("button").onclick = function () { try { google.accounts.id.disableAutoSelect(); } catch (e) {} auth.signOut(); };
       v.insertAdjacentElement("afterend", p);
     });
   }

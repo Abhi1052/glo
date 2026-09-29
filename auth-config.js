@@ -8,5 +8,6 @@ window.CHAMKU_AUTH = {
     messagingSenderId: "842530855579",
     appId: "1:842530855579:web:467ef45835ea65a602c43e"
   },
+  googleClientId: "842530855579-ag2rc1r1nb8fksqtr9o9r92sv4n3icqp.apps.googleusercontent.com",
   admins: ["as29110@gmail.com", "abhishek1052@iimtrichy.ac.in"]
 };
