@@ -55,3 +55,12 @@ header.top > .brand { margin-right: auto; }
 body.has-mini #app { padding-bottom: 70px; }
 /* more stories row under a story */
 .more-row .card { flex: 0 0 64%; max-width: 260px; }
+
+.cm-langs { display: flex; gap: 8px; }
+.cm-langs button { flex: 1; border: 1px solid var(--line); background: var(--card); color: var(--text); font: inherit; font-weight: 600; padding: 9px 6px; border-radius: 12px; }
+.cm-langs button.on { background: var(--amber); color: #2a1a00; border-color: var(--amber); }
+
+.ca-inapp { background: rgba(244,185,90,.12); border: 1px solid rgba(244,185,90,.4); border-radius: 12px; padding: 10px 12px; margin: 0 0 12px; font-size: 14px; }
+.ca-inapp .pill { margin-top: 8px; justify-content: center; text-decoration: none; }
+.ca-gbtn { min-height: 44px; display: flex; align-items: center; justify-content: center; }
+.home-btn { white-space: nowrap; }

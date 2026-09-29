@@ -134,7 +134,7 @@
     var who = (S.child && S.child.name ? esc(S.child.name) + " · " : "") + (st ? esc(L(stageObj(st).ages)) : "");
     return '<header class="top"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button><a class="brand" href="#/home"><img class="avatar" src="glo-face.webp" alt="Chamku"><div><h1>Chamku</h1><p>' + t("tagline") + "</p></div></a>" +
       '<div class="top-r">' + (who ? '<button class="who" data-act="settings">' + who + "</button>" : "") +
-      '<button class="lang-btn" data-act="settings">🌐 ' + esc(D.languages.filter(function (l) { return l.code === lang(); })[0].label) + "</button>" +
+      '<button class="lang-btn" data-act="langtoggle">🌐 ' + esc(D.languages.filter(function (l) { return l.code === lang(); })[0].label) + "</button>" +
       '</div></header>' +
       '<a class="searchbar" href="#/search">🔍 <span>' + t("search") + "</span></a>";
   }
@@ -346,6 +346,7 @@
   };
   window.chamkuT = function (k) { return t(k); };
   window.chamkuRender = function () { render(true); };
+  window.chamkuSetLang = function (code) { S.lang = code; save("glo.lang", code); render(true); };
   function pageStory(s) {
     var b = D.bodies[s.id], parts = b.parts[lang()] || b.parts.en, c = cat(s.category);
     var vid = b.video && (b.video[lang()] || b.video.en);
@@ -355,7 +356,7 @@
       return '<section class="part"><h2>' + esc(p.heading) + '</h2><div class="dir">(' + esc(p.direction) + ")</div>" +
         p.text.split("\n").map(function (l) { return "<p>" + esc(l) + "</p>"; }).join("") + "</section>";
     }).join("");
-    return '<div class="story-page"><div class="bar"><span class="bar-l"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button><a class="icon-btn" href="#/c/' + c.id + '">' + t("back") + "</a></span>" +
+    return '<div class="story-page"><div class="bar"><span class="bar-l"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button><a class="icon-btn" href="#/c/' + c.id + '">' + t("back") + '</a><a class="icon-btn home-btn" href="#/home" aria-label="' + t("home") + '">🏠 ' + t("home") + "</a></span>" +
       '<button class="icon-btn" data-act="fav" data-id="' + s.id + '" aria-pressed="' + isFav(s.id) + '">♥</button></div>' +
       '<div class="story-head"><h1>' + esc(L(s.title)) + '</h1><div class="meta">' + esc(L(b.source)) + " · " + esc(agesOf(s)) + " · " + s.minutes + " " + t("min") + "</div></div>" +
       (vid ? modeTabs() : "") + (vid && listenMode() ? listenBox(s) : player) +
@@ -432,6 +433,11 @@
     if (b.hasAttribute("data-stage")) { S.parentStage = b.getAttribute("data-stage"); render(true); return; }
     var act = b.getAttribute("data-act");
     if (act === "menu") { if (window.ChamkuMenu) window.ChamkuMenu.open(D, lang()); return; }
+    if (act === "langtoggle") {
+      var rl = D.languages.filter(function (l) { return l.ready; });
+      if (rl.length === 2) window.chamkuSetLang(rl[0].code === lang() ? rl[1].code : rl[0].code); else openSettings(false);
+      return;
+    }
     if (act === "settings") openSettings(false);
     else if (act === "night") openNight();
     else if (act === "more") { S.shown += PAGE; render(true); }
@@ -509,7 +515,7 @@
 
   window.addEventListener("hashchange", function () { route(false); });
   fetch("data.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) {
-    D = d; route(false); if (!S.lang || !S.child) openSettings(true);
+    D = d; route(false);
   }).catch(function () { app.innerHTML = '<div class="wrap"><p class="empty">Could not load Chamku. Please check your internet and open again.</p></div>'; });
   if ("serviceWorker" in navigator) window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
 })();

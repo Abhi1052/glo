@@ -17,13 +17,37 @@
       var s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = bad; document.head.appendChild(s);
     });
   }
+  var gisLoad = null;
+  function loadGis() {
+    if (!gisLoad && CFG && CFG.googleClientId) gisLoad = load("https://accounts.google.com/gsi/client").then(function () { return true; }, function () { gisLoad = null; return false; });
+    return gisLoad;
+  }
+  function warm() { loadGis(); init(); }
+  if (CFG && CFG.firebase) { if (document.readyState === "complete") setTimeout(warm, 300); else window.addEventListener("load", function () { setTimeout(warm, 300); }); }
+
+  /* in-app browsers (WhatsApp, Instagram, Facebook...) - Google blocks sign-in inside them */
+  var UA = navigator.userAgent || "";
+  var ANDROID = /Android/i.test(UA);
+  var INAPP = /; wv\)|FBAN|FBAV|FB_IAB|Instagram|Line\/|Snapchat|LinkedInApp|Twitter|MicroMessenger|WhatsApp/i.test(UA) || (/iPhone|iPad/.test(UA) && !/Safari\//.test(UA));
+  function chromeLink() { return "intent://" + location.host + location.pathname + "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" + encodeURIComponent(location.origin + location.pathname) + ";end"; }
+
+  /* small log of sign-in attempts, so we can see where phones get stuck (no personal data: only the phone type and the step) */
+  function slog(step, extra) {
+    try {
+      if (!db) return;
+      var d = { step: step, ua: UA.slice(0, 180), inapp: INAPP, android: ANDROID, gis: !!(window.google && google.accounts && google.accounts.id), t: firebase.firestore.FieldValue.serverTimestamp() };
+      if (extra) d.err = String(extra).slice(0, 120);
+      db.collection("signin_log").add(d).catch(function () {});
+    } catch (e) {}
+  }
+
   function init() {
     if (ready) return ready;
+    loadGis();
     if (!CFG || !CFG.firebase || !CFG.firebase.apiKey) { ready = Promise.resolve(false); return ready; }
     ready = load(SDK + "firebase-app-compat.js")
       .then(function () { return Promise.all([load(SDK + "firebase-auth-compat.js"), load(SDK + "firebase-firestore-compat.js")]); })
       .then(function () {
-        if (CFG.googleClientId) load("https://accounts.google.com/gsi/client").catch(function () {});
         firebase.initializeApp(CFG.firebase);
         auth = firebase.auth(); db = firebase.firestore();
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function () {});
@@ -38,17 +62,28 @@
         }
         return new Promise(function (ok) {
           auth.onAuthStateChanged(function (u) {
-            user = u; ok(true); paintBadge();
-            if (u) {
-              db.collection("users").doc(u.uid).set({ email: u.email || "", name: u.displayName || "", provider: (u.providerData[0] || {}).providerId || "email",
-                lastSeen: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }).catch(function () {});
-              var w = waiting; waiting = []; w.forEach(function (f) { f(); });
-              closeSheet();
+            user = u; paintBadge();
+            if (!u) {
+              // nobody signed in: sign in silently without a name, so we can still see which stories get finished
+              auth.signInAnonymously().catch(function () { ok(true); });
+              return;
             }
+            ok(true);
+            loggedIn(u);
           });
         });
       }).catch(function () { return false; });
     return ready;
+  }
+
+  function real() { return !!(user && !user.isAnonymous); }
+  function loggedIn(u) {
+    user = u;
+    db.collection("users").doc(u.uid).set({ email: u.email || "", name: u.displayName || "", provider: u.isAnonymous ? "anonymous" : ((u.providerData[0] || {}).providerId || "email"),
+      lastSeen: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }).catch(function () {});
+    if (u.isAnonymous) return;
+    var w = waiting; waiting = []; w.forEach(function (f) { f(); });
+    closeSheet();
   }
 
   /* ---------- sign-in sheet ---------- */
@@ -62,8 +97,11 @@
     box.innerHTML = '<div class="ca-card" role="dialog" aria-modal="true"><img src="glo-face.webp" alt="" class="ca-img">' +
       "<h2>" + T("Sign in once to listen", "सुनने के लिए एक बार sign in करें") + "</h2>" +
       "<p>" + T("It's free while we are testing. You stay signed in on this phone.", "Testing के दौरान बिल्कुल free। इस फ़ोन पर आप signed in रहेंगे।") + "</p>" +
-      '<div id="ca-gbtn" class="ca-gbtn"></div>' +
-      '<button class="pill wide ca-google" id="ca-g"><span class="ca-gl">G</span> ' + T("Continue with Google", "Google से आगे बढ़ें") + "</button>" +
+      (INAPP ? '<div class="ca-inapp">' + T("Google sign-in does not work inside this app's browser.", "इस app के अंदर वाले browser में Google sign-in नहीं चलता।") +
+        (ANDROID ? ' <a class="pill wide" id="ca-chrome" href="' + chromeLink() + '">' + T("Open in Chrome", "Chrome में खोलें") + "</a>"
+                 : " " + T("Tap ⋯ or the share button and choose “Open in Safari”.", "⋯ या share बटन दबाकर “Open in Safari” चुनें।")) + "</div>" : "") +
+      '<div id="ca-gbtn" class="ca-gbtn"><span class="small muted">' + T("Loading Google sign-in…", "Google sign-in खुल रहा है…") + "</span></div>" +
+      '<button class="pill wide ca-google" id="ca-g" style="display:none"><span class="ca-gl">G</span> ' + T("Continue with Google", "Google से आगे बढ़ें") + "</button>" +
       '<div class="ca-or">' + T("or", "या") + "</div>" +
       '<input id="ca-em" type="email" inputmode="email" autocomplete="email" placeholder="' + T("Your email", "आपका email") + '">' +
       '<button class="pill ghost wide" id="ca-e">' + T("Email me a sign-in link", "मुझे sign-in link भेजें") + "</button>" +
@@ -76,6 +114,7 @@
     box.querySelector("#ca-x").onclick = closeSheet;
     box.addEventListener("click", function (e) { if (e.target === box) closeSheet(); });
     // Preferred: Google's own sign-in button (works on phones where the Firebase popup/redirect is blocked)
+    slog("sheet");
     gisButton(box.querySelector("#ca-gbtn"), box.querySelector("#ca-g"));
     box.querySelector("#ca-g").onclick = function () {
       toast("…");
@@ -100,16 +139,34 @@
 
   var gisReady = false;
   function onGoogleCredential(resp) {
-    toast("…");
-    auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(resp.credential)).catch(function (e) {
+    toast("…"); slog("google_ok");
+    var cred = firebase.auth.GoogleAuthProvider.credential(resp.credential);
+    var step = user && user.isAnonymous
+      ? user.linkWithCredential(cred).then(function (r) { return r; }, function (e) {
+          if (e && /already-in-use/.test(e.code || "")) return auth.signInWithCredential(cred);
+          throw e;
+        })
+      : auth.signInWithCredential(cred);
+    step.then(function (r) { slog("signed_in"); var u = (r && r.user) || auth.currentUser; if (u) loggedIn(u); }).catch(function (e) {
+      slog("firebase_err", e && (e.code || e.message));
       toast(T("Could not sign in. Please try again.", "Sign in नहीं हो पाया। कृपया फिर से कोशिश करें।") + (e && e.code ? " (" + e.code + ")" : ""));
     });
   }
   function gisButton(holder, fallback, tries) {
     tries = tries || 0;
     var g = window.google && google.accounts && google.accounts.id;
-    if (!g || !CFG.googleClientId) { if (tries < 20) setTimeout(function () { gisButton(holder, fallback, tries + 1); }, 150); return; }
-    if (!gisReady) { g.initialize({ client_id: CFG.googleClientId, callback: onGoogleCredential, ux_mode: "popup", auto_select: false, context: "signin" }); gisReady = true; }
+    if (!g || !CFG.googleClientId) {
+      if (tries === 0) loadGis();
+      if (tries < 100) { setTimeout(function () { gisButton(holder, fallback, tries + 1); }, 200); return; }
+      slog("gis_timeout");
+      holder.innerHTML = '<span class="small muted">' + T("Google sign-in could not load. Please use the email link below.", "Google sign-in नहीं खुल पाया। नीचे email link से sign in करें।") + "</span>";
+      if (fallback && !/Android|iPhone|iPad/i.test(UA)) fallback.style.display = "";
+      return;
+    }
+    if (!gisReady) { g.initialize({ client_id: CFG.googleClientId, callback: onGoogleCredential, ux_mode: "popup", auto_select: false, context: "signin",
+      use_fedcm_for_prompt: true, itp_support: true, cancel_on_tap_outside: false }); gisReady = true; }
+    // one tap: Google shows "Continue as <name>" at the bottom of the screen - a single tap signs in
+    if (!real() && box) { try { g.prompt(function (n) { try { if (n.isSkippedMoment && n.isSkippedMoment()) slog("onetap_skipped", n.getSkippedReason && n.getSkippedReason()); } catch (x) {} }); slog("onetap_shown"); } catch (e) {} }
     holder.innerHTML = "";
     g.renderButton(holder, { type: "standard", theme: "filled_blue", size: "large", text: "continue_with", shape: "pill", logo_alignment: "left", width: Math.min(320, (holder.clientWidth || 300)) });
     if (fallback) fallback.style.display = "none";
@@ -144,12 +201,7 @@
     }
     v.addEventListener("play", function () {
       if (user) { if (!doc) save({}); return; }
-      v.pause();
-      init().then(function (ok) {
-        if (!ok) { v.__free = true; v.play(); return; }           // login not available: let it play
-        if (user) { v.play(); return; }
-        waiting = [function () { v.play(); }]; openSheet();
-      });
+      init();   // no sign-in needed to play; the record starts once the silent sign-in is ready
     });
     v.addEventListener("timeupdate", function () {
       if (!user || v.seeking) return;
@@ -186,12 +238,13 @@
     var root = document.getElementById("ca-report"); if (!root || root.__done) return; root.__done = true;
     init().then(function (ok) {
       if (!ok) { root.textContent = "Login is not set up yet."; return; }
-      if (!user) { root.innerHTML = '<button class="pill" id="ca-rs">Sign in</button>'; root.querySelector("#ca-rs").onclick = openSheet; waiting = [function () { root.__done = false; report(); }]; return; }
+      if (!real()) { root.innerHTML = '<button class="pill" id="ca-rs">Sign in</button>'; root.querySelector("#ca-rs").onclick = openSheet; waiting = [function () { root.__done = false; report(); }]; return; }
       if (ADMINS.indexOf((user.email || "").toLowerCase()) < 0) { root.textContent = "This page is only for the Chamku team."; return; }
       root.textContent = "Loading…";
       Promise.all([db.collection("plays").orderBy("started", "desc").limit(5000).get(), db.collection("users").get(),
         fetch("data.json").then(function (x) { return x.json(); }).catch(function () { return { stories: [] }; })]).then(function (r) {
-        var rows = {}, users = r[1].size, byId = {}, conts = [];
+        var rows = {}, users = 0, anon = 0, byId = {}, conts = [];
+        r[1].forEach(function (d) { if ((d.data().provider || "") === "anonymous") anon++; else users++; });
         r[0].forEach(function (d) { var p = d.data(); if (p.cont) conts.push(p); else byId[d.id] = p; });
         // a story that carried on as sound after the phone was locked: add its progress to the original play
         conts.forEach(function (c) { var o = byId[c.of]; if (!o) return; ["m2", "p25", "p50", "p75", "done"].forEach(function (k) { if (c[k]) o[k] = true; }); o.maxSec = Math.max(o.maxSec || 0, c.maxSec || 0); });
@@ -204,7 +257,7 @@
         var list = Object.keys(rows).map(function (k) { var s = rows[k]; s.id = k; s.early_pct = Math.round(100 * s.early / s.plays); return s; })
           .sort(function (a, b) { return b.early_pct - a.early_pct; });
         function pc(a, b) { return b ? Math.round(100 * a / b) + "%" : "–"; }
-        root.innerHTML = "<p><b>" + users + "</b> parents signed up · <b>" + Object.keys(byId).length + "</b> plays</p>" +
+        root.innerHTML = "<p><b>" + users + "</b> parents signed in · <b>" + anon + "</b> phones listening without signing in · <b>" + Object.keys(byId).length + "</b> plays</p>" +
           '<p class="small muted">Sorted by early stops. "Stopped early" = stopped before 2 minutes. Not finishing is fine at bedtime (the child may fall asleep); stopping early is the warning sign.</p>' +
           '<div style="overflow-x:auto"><table class="ca-table"><tr><th>Story</th><th>Plays</th><th>People</th><th>Stopped early</th><th>Past 2 min</th><th>Half</th><th>Finished</th></tr>' +
           list.map(function (s) {
@@ -223,7 +276,7 @@
     var hiL = lang === "hi";
     function L(o) { return o ? (o[lang] || o.en || "") : ""; }
     function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-    var acct = user
+    var acct = real()
       ? '<div class="cm-acct"><span>👤 ' + esc(user.email || user.displayName || "") + '</span><button class="link" id="cm-out" type="button">' + (hiL ? "Sign out" : "Sign out") + "</button></div>"
       : '<button class="pill wide" id="cm-in" type="button">' + (hiL ? "Sign in करें" : "Sign in") + "</button>";
     var cats = (D && D.categories || []).map(function (c) {
@@ -238,11 +291,16 @@
     drawer.className = "cm-wrap";
     drawer.innerHTML = '<aside class="cm-panel" role="dialog" aria-modal="true"><div class="cm-head"><b>Chamku</b><button class="icon-btn" id="cm-x" aria-label="Close">✕</button></div>' +
       acct + '<h4>' + (hiL ? "Categories" : "Categories") + "</h4>" + cats + "<h4>" + (hiL ? "और" : "More") + "</h4>" + links + admin +
-      '<button class="cm-item" id="cm-set" type="button"><span>🌐</span>' + (hiL ? "भाषा / बच्चे की उम्र" : "Language & child's age") + "</button>" +
+      "<h4>" + (hiL ? "भाषा" : "Language") + '</h4><div class="cm-langs">' + (D.languages || []).filter(function (l) { return l.ready; }).map(function (l) {
+        return '<button type="button" data-l="' + l.code + '" class="' + (l.code === lang ? "on" : "") + '">' + l.label + "</button>"; }).join("") + "</div>" +
+      '<button class="cm-item" id="cm-set" type="button"><span>🧒</span>' + (hiL ? "बच्चे का नाम और उम्र" : "Child's name & age") + "</button>" +
       '<a class="cm-item" href="privacy.html"><span>🔒</span>Privacy</a></aside>';
     document.body.appendChild(drawer);
     drawer.addEventListener("click", function (e) { if (e.target === drawer || e.target.closest("a.cm-item")) closeMenu(); });
     drawer.querySelector("#cm-x").onclick = closeMenu;
+    [].forEach.call(drawer.querySelectorAll(".cm-langs button"), function (b) {
+      b.onclick = function () { closeMenu(); if (window.chamkuSetLang) window.chamkuSetLang(b.getAttribute("data-l")); };
+    });
     drawer.querySelector("#cm-set").onclick = function () { closeMenu(); if (window.chamkuOpenSettings) window.chamkuOpenSettings(); };
     var bi = drawer.querySelector("#cm-in");
     if (bi) bi.onclick = function () { closeMenu(); init().then(function (ok) { if (ok) { waiting = []; openSheet(); } }); };
