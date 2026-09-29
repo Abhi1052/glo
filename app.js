@@ -17,7 +17,7 @@
       language: "Language", childName: "Child's name (optional)", age: "Age", under1: "Under 1", year: "year", years: "years",
       begin: "Let's begin", skip: "Skip for now", privacy: "This stays on your phone only. No ads, no tracking.",
       forName: "For {name}", forAge: "For {ages}", pickedFor: "Picked for {ages}", allAges: "All ages", all: "All",
-      fbTitle: "Tell us how it went (for our test)", fbLike: "Did your child like it?", fbL1: "😍 Loved it", fbL2: "🙂 It was OK", fbL3: "😐 Not really", fbGot: "Did they understand the story?", fbG1: "✅ Yes", fbG2: "🤔 A little", fbG3: "❌ No", fbAge: "Child's age", fbNote: "Anything they said or did? (optional)", fbSend: "Send feedback on WhatsApp", fbPick: "Please pick an answer for both questions.", soon: "Coming soon", readyNow: "Ready", start: "▶ Watch", min: "min",
+      fbTitle: "Tell us how it went (for our test)", fbLike: "Did your child like it?", fbL1: "😍 Loved it", fbL2: "🙂 It was OK", fbL3: "😐 Not really", fbGot: "Did they understand the story?", fbG1: "✅ Yes", fbG2: "🤔 A little", fbG3: "❌ No", fbAge: "Child's age", fbNote: "Anything they said or did? (optional)", fbSend: (window.CHAMKU_FB && window.CHAMKU_FB.action) ? "Send feedback" : "Send feedback on WhatsApp", fbThanks: "Thank you! Your feedback has been sent.", fbFail: "Could not send right now. We will try again automatically.", fbPick: "Please pick an answer for both questions.", soon: "Coming soon", readyNow: "Ready", start: "▶ Watch", min: "min",
       builds: "Builds", why: "Why this helps", sources: "Sources", sample: "Meanwhile, watch our sample story",
       back: "← Back", talk: "Talk together",
       watchNote: "Chamku tells this story. He says hello, then shrinks to a tiny light, and the screen stays almost dark for the rest of the story — so it helps your child sleep instead of waking them up.",
@@ -40,7 +40,7 @@
       language: "भाषा", childName: "बच्चे का नाम (अगर चाहें)", age: "उम्र", under1: "1 साल से कम", year: "साल", years: "साल",
       begin: "चलिए शुरू करें", skip: "अभी छोड़ें", privacy: "ये सिर्फ़ आपके फ़ोन पर रहता है। कोई विज्ञापन नहीं, कोई ट्रैकिंग नहीं।",
       forName: "{name} के लिए", forAge: "{ages} के लिए", pickedFor: "{ages} के लिए चुनी गईं", allAges: "सभी उम्र", all: "सब",
-      fbTitle: "बताइए कैसी लगी (हमारे टेस्ट के लिए)", fbLike: "बच्चे को कहानी पसंद आई?", fbL1: "😍 बहुत पसंद आई", fbL2: "🙂 ठीक थी", fbL3: "😐 ज़्यादा नहीं", fbGot: "क्या बच्चा कहानी समझ पाया?", fbG1: "✅ हाँ", fbG2: "🤔 थोड़ा-सा", fbG3: "❌ नहीं", fbAge: "बच्चे की उम्र", fbNote: "बच्चे ने कुछ कहा या किया? (अगर चाहें)", fbSend: "WhatsApp पर feedback भेजें", fbPick: "कृपया दोनों सवालों का जवाब चुनिए।", soon: "जल्द आ रही है", readyNow: "तैयार", start: "▶ देखें", min: "मिनट",
+      fbTitle: "बताइए कैसी लगी (हमारे टेस्ट के लिए)", fbLike: "बच्चे को कहानी पसंद आई?", fbL1: "😍 बहुत पसंद आई", fbL2: "🙂 ठीक थी", fbL3: "😐 ज़्यादा नहीं", fbGot: "क्या बच्चा कहानी समझ पाया?", fbG1: "✅ हाँ", fbG2: "🤔 थोड़ा-सा", fbG3: "❌ नहीं", fbAge: "बच्चे की उम्र", fbNote: "बच्चे ने कुछ कहा या किया? (अगर चाहें)", fbSend: (window.CHAMKU_FB && window.CHAMKU_FB.action) ? "Feedback भेजें" : "WhatsApp पर feedback भेजें", fbThanks: "धन्यवाद! आपका feedback भेज दिया गया है।", fbFail: "अभी नहीं भेज पाए। हम अपने आप फिर से कोशिश करेंगे।", fbPick: "कृपया दोनों सवालों का जवाब चुनिए।", soon: "जल्द आ रही है", readyNow: "तैयार", start: "▶ देखें", min: "मिनट",
       builds: "क्या सिखाती है", why: "ये क्यों मदद करता है", sources: "स्रोत", sample: "तब तक हमारी नमूना कहानी देखिए",
       back: "← वापस", talk: "साथ में बात करें",
       watchNote: "ये कहानी चमकू सुनाता है। वो नमस्ते कहता है, फिर एक नन्ही-सी रोशनी बन जाता है, और बाकी कहानी में स्क्रीन लगभग अँधेरी रहती है — ताकि बच्चा जागे नहीं, सो जाए।",
@@ -270,6 +270,27 @@
       '<a class="pill" href="#/s/anaya-brushu">' + t("sample") + " →</a>";
   }
 
+  // ---- feedback goes to the Chamku Google Form (answers land in a Google Sheet) ----
+  var FB = window.CHAMKU_FB || null;
+  window.chamkuSendFeedback = function (rec, cb) {
+    function post(r) {
+      if (!FB || !FB.action) return Promise.reject("no form");
+      var body = new URLSearchParams();
+      Object.keys(FB.fields).forEach(function (k) { body.append(FB.fields[k], r[k] || ""); });
+      return fetch(FB.action, { method: "POST", mode: "no-cors", body: body });
+    }
+    var q = []; try { q = JSON.parse(localStorage.getItem("chamku_fb_q") || "[]"); } catch (e) {}
+    post(rec).then(function () { cb && cb(true); flush(); }, function () {
+      q.push(rec); try { localStorage.setItem("chamku_fb_q", JSON.stringify(q)); } catch (e) {}
+      cb && cb(false);
+    });
+    function flush() {
+      var left = []; try { left = JSON.parse(localStorage.getItem("chamku_fb_q") || "[]"); } catch (e) {}
+      if (!left.length) return; try { localStorage.setItem("chamku_fb_q", "[]"); } catch (e) {}
+      left.forEach(function (r) { post(r).catch(function () {}); });
+    }
+  };
+
   function feedback(s) {
     function btns(k, keys) { return '<div class="fb-opts">' + keys.map(function (x, i) { return '<button type="button" class="pill ghost fb" data-act="fb" data-k="' + k + '" data-v="' + (i + 1) + '">' + t(x) + "</button>"; }).join("") + "</div>"; }
     var ages = '<option value="">—</option>'; for (var a = 1; a <= 10; a++) ages += '<option value="' + a + '"' + (S.child && S.child.age === a ? " selected" : "") + ">" + a + "</option>";
@@ -376,7 +397,12 @@
       var ag = bx.querySelector("#fb-age").value, nt = bx.querySelector("#fb-note").value.trim();
       var msg = "Chamku test feedback\nStory: " + st.title.en + " (" + st.title.hi + ")\nLiked: " + lk.textContent + "\nUnderstood: " + gt.textContent +
         "\nChild's age: " + (ag || "-") + (nt ? "\nNote: " + nt : "");
-      window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+      var rec = { story: st.title.en + " [" + sid + "]", liked: lk.textContent.trim(), got: gt.textContent.trim(), age: ag || "", note: nt, lang: lang() };
+      if (!(window.CHAMKU_FB && window.CHAMKU_FB.action)) { window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank"); return; }
+      window.chamkuSendFeedback(rec, function (ok) {
+        bx.querySelector("#fb-msg").textContent = t(ok ? "fbThanks" : "fbFail");
+        if (ok) { b.disabled = true; b.textContent = "✅"; }
+      });
     }
 
     else if (act === "fav") {
