@@ -36,11 +36,10 @@
       "<h4>" + T("What research shows", "रिसर्च क्या कहती है") + '</h4><ol class="sci-list">' + findings + "</ol>" +
       "<h4>" + T("How Chamku uses it in this story", "चमकू इस कहानी में इसे कैसे इस्तेमाल करता है") + "</h4><p>" + esc(v.how_story_uses_it) + "</p>" +
       (v.age_note ? '<div class="sci-card"><b>📏 ' + T("What is typical at this age", "इस उम्र में क्या आम है") + "</b><p>" + esc(v.age_note) + " " + refs(v.age_src) + "</p></div>" : "") +
-      (v.try_tonight ? '<div class="sci-card sci-try"><b>🌙 ' + T("Try this tonight", "आज रात ये करके देखें") + "</b><p>" + esc(v.try_tonight) + " " + refs(v.try_src) + "</p></div>" : "") +
-      (v.doctor ? '<div class="sci-card sci-doc"><b>🩺 ' + T("When to ask your doctor", "डॉक्टर से कब पूछें") + "</b><p>" + esc(v.doctor) + " " + refs(v.doctor_src) + "</p></div>" : "");
+      (v.try_tonight ? '<div class="sci-card sci-try"><b>🌙 ' + T("Try this tonight", "आज रात ये करके देखें") + "</b><p>" + esc(v.try_tonight) + " " + refs(v.try_src) + "</p></div>" : "");
     h += '<details class="sci-src"><summary>📚 ' + T("Sources", "स्रोत") + " (" + order.length + ")</summary><ol>" +
       order.map(function (k, i) { return '<li id="sci-' + id + "-" + (i + 1) + '">' + cite(d.sources[k]) + "</li>"; }).join("") + "</ol></details>" +
-      '<p class="sci-note small muted">' + T("Written by the Chamku team from published research. General information, not medical advice.", "चमकू टीम ने छपी हुई रिसर्च से लिखा है। यह आम जानकारी है, डॉक्टरी सलाह नहीं।") +
+      '<p class="sci-note small muted">' + T("Written by the Chamku team from published research.", "चमकू टीम ने छपी हुई रिसर्च से लिखा है।") +
       ' <a href="#/science">' + T("See all the science", "पूरा विज्ञान देखें") + " →</a></p></section>";
     return h;
   }
@@ -49,7 +48,7 @@
     var ids = Object.keys(d.stories), src = d.sources, keys = Object.keys(src);
     var used = {}; ids.forEach(function (id) {
       var v = d.stories[id];
-      [].concat.apply([], v.findings.map(function (f) { return f.src; })).concat(v.age_src || [], v.try_src || [], v.doctor_src || []).forEach(function (k) { (used[k] = used[k] || {})[id] = 1; });
+      [].concat.apply([], v.findings.map(function (f) { return f.src; })).concat(v.age_src || [], v.try_src || []).forEach(function (k) { (used[k] = used[k] || {})[id] = 1; });
     });
     var findings = ids.reduce(function (n, id) { return n + d.stories[id].findings.length; }, 0);
     var titles = window.chamkuInfo ? function (id) { var i = window.chamkuInfo(id); return i ? i.icon + " " + i.title : id; } : function (id) { return id; };
@@ -65,7 +64,7 @@
       '<div class="lib-stats"><div><b>' + Object.keys(used).length + "</b><span>" + T("studies & guidelines", "रिसर्च और गाइडलाइन") + "</span></div><div><b>" + findings + "</b><span>" + T("research findings", "रिसर्च के नतीजे") + "</span></div><div><b>" + ids.length + "</b><span>" + T("stories explained", "कहानियाँ समझाई गईं") + "</span></div></div>" +
       "<h2 class=\"row-title\">" + T("The science of each story", "हर कहानी का विज्ञान") + '</h2><div class="lib-stories">' + skills + "</div>" +
       "<h2 class=\"row-title\">" + T("All sources", "सभी स्रोत") + '</h2><ol class="lib-src">' + list + "</ol>" +
-      '<p class="sci-note small muted">' + T("General information, not medical advice. Talk to your paediatrician about your own child.", "यह आम जानकारी है, डॉक्टरी सलाह नहीं। अपने बच्चे के बारे में अपने बाल-रोग डॉक्टर से बात करें।") + "</p>";
+      '<p class="sci-note small muted">' + T("Written by the Chamku team from published research.", "चमकू टीम ने छपी हुई रिसर्च से लिखा है।") + "</p>";
   }
 
   function scan() {
