@@ -20,6 +20,8 @@
       fbTitle: "How did your child find this story?", fbGot: "How well did your child understand the story?", fbGotLo: "1 = not at all", fbGotHi: "10 = fully", fbInt: "How interested was your child, from start to end?", fbIntLo: "1 = lost interest early", fbIntHi: "10 = hooked till the end", fbSend: "Submit", fbDone: "Sent", fbThanks: "Thank you! Your answer has been sent.", fbFail: "Could not send right now. We will try again automatically.", fbPick: "Please tap a number for both questions.", soon: "Coming soon", readyNow: "Ready", start: "▶ Watch", min: "min",
       builds: "Builds", why: "Why this helps", sources: "Sources", sample: "Meanwhile, watch our sample story",
       back: "← Back", talk: "Talk together",
+      mWatch: "Watch", mListen: "Listen only", mAlbum: "Bedtime stories", moreStories: "More stories →",
+      listenNote: "You can lock the phone — the story keeps playing. Pause it or skip to the next story from the lock screen.",
       watchNote: "Chamku tells this story. He says hello, then shrinks to a tiny light, and the screen stays almost dark for the rest of the story — so it helps your child sleep instead of waking them up.",
       videoSoon: "Chamku's video for this story is being made.", script: "Read the story script (for testing)",
       endText: "The end... time to sleep.", nightOn: "🌙 Turn on the night light", goodnight: "Goodnight...", goBack: "Go back",
@@ -43,6 +45,8 @@
       fbTitle: "बच्चे को ये कहानी कैसी लगी?", fbGot: "बच्चे को कहानी कितनी समझ आई?", fbGotLo: "1 = बिल्कुल नहीं", fbGotHi: "10 = पूरी", fbInt: "शुरू से आख़िर तक बच्चे का मन कितना लगा रहा?", fbIntLo: "1 = जल्दी ऊब गया", fbIntHi: "10 = आख़िर तक मन लगा रहा", fbSend: "Submit करें", fbDone: "भेज दिया", fbThanks: "धन्यवाद! आपका जवाब भेज दिया गया है।", fbFail: "अभी नहीं भेज पाए। हम अपने आप फिर से कोशिश करेंगे।", fbPick: "कृपया दोनों सवालों के लिए एक number चुनिए।", soon: "जल्द आ रही है", readyNow: "तैयार", start: "▶ देखें", min: "मिनट",
       builds: "क्या सिखाती है", why: "ये क्यों मदद करता है", sources: "स्रोत", sample: "तब तक हमारी नमूना कहानी देखिए",
       back: "← वापस", talk: "साथ में बात करें",
+      mWatch: "देखें", mListen: "सिर्फ़ सुनें", mAlbum: "सोने की कहानियाँ", moreStories: "और कहानियाँ →",
+      listenNote: "फ़ोन lock कर सकते हैं — कहानी चलती रहेगी। Lock screen से रोक सकते हैं या अगली कहानी चला सकते हैं।",
       watchNote: "ये कहानी चमकू सुनाता है। वो नमस्ते कहता है, फिर एक नन्ही-सी रोशनी बन जाता है, और बाकी कहानी में स्क्रीन लगभग अँधेरी रहती है — ताकि बच्चा जागे नहीं, सो जाए।",
       videoSoon: "इस कहानी का चमकू वाला वीडियो बन रहा है।", script: "कहानी की स्क्रिप्ट पढ़ें (टेस्टिंग के लिए)",
       endText: "कहानी ख़त्म... अब सोने का समय।", nightOn: "🌙 रात की रोशनी चालू करें", goodnight: "गुड नाइट...", goBack: "वापस जाएँ",
@@ -105,7 +109,7 @@
   function card(s) {
     var c = cat(s.category), tp = topic(s.category, s.topic);
     return '<a class="card' + (s.ready ? " ready" : "") + '" href="#/s/' + s.id + '">' +
-      '<div class="thumb c-' + s.category + '"><span>' + (tp ? tp.icon : c.icon) + "</span>" + (s.ready ? '<i class="play">▶</i>' : "") + "</div>" +
+      '<div class="thumb c-' + s.category + '"><span>' + (s.icon || (tp ? tp.icon : c.icon)) + "</span>" + (s.ready ? '<i class="play">▶</i>' : "") + "</div>" +
       '<div class="cb"><h3>' + esc(L(s.title)) + (isFav(s.id) ? ' <span class="fav-mark">♥</span>' : "") + "</h3>" +
       '<div class="meta">' + esc(agesOf(s)) + " · " + esc(L(s.builds)) + "</div>" +
       (s.ready ? '<span class="badge ok">' + t("readyNow") + " · " + s.minutes + " " + t("min") + "</span>" : '<span class="badge">' + t("soon") + "</span>") +
@@ -265,7 +269,7 @@
   function pageInfo(s) {
     var c = cat(s.category), tp = topic(s.category, s.topic);
     return '<div class="bar"><a class="icon-btn" href="#/c/' + c.id + '">' + t("back") + '</a><button class="icon-btn" data-act="fav" data-id="' + s.id + '" aria-pressed="' + isFav(s.id) + '">♥</button></div>' +
-      '<div class="thumb big c-' + s.category + '"><span>' + (tp ? tp.icon : c.icon) + "</span></div>" +
+      '<div class="thumb big c-' + s.category + '"><span>' + (s.icon || (tp ? tp.icon : c.icon)) + "</span></div>" +
       '<div class="story-head"><h1>' + esc(L(s.title)) + '</h1><div class="meta">' + esc(L(c.name)) + (tp ? " · " + esc(L(tp.name)) : "") + " · " + esc(agesOf(s)) + '</div><span class="badge">' + t("soon") + "</span></div>" +
       '<div class="guide"><h3>' + t("builds") + "</h3><p>" + esc(L(s.builds)) + "</p><h3>" + t("why") + "</h3><p>" + esc(L(c.why)) + srcLinks(c.why.src) + "</p></div>" +
       '<a class="pill" href="#/s/anaya-brushu">' + t("sample") + " →</a>";
@@ -303,6 +307,45 @@
       "<p><b>" + t("fbInt") + "</b></p>" + scale("int", "fbIntLo", "fbIntHi") +
       '<p id="fb-msg" class="small muted"></p><button type="button" class="pill wide" data-act="fbsend">' + t("fbSend") + "</button></div>";
   }
+  function listenMode() { try { return localStorage.getItem("glo.mode") === "listen"; } catch (e) { return false; } }
+  function modeTabs() {
+    var l = listenMode();
+    return '<div class="mode-tabs" role="tablist"><button type="button" data-lp="mode" data-m="watch" class="' + (l ? "" : "on") + '">📺 ' + t("mWatch") + "</button>" +
+      '<button type="button" data-lp="mode" data-m="listen" class="' + (l ? "on" : "") + '">🎧 ' + t("mListen") + "</button></div>";
+  }
+  function listenBox(s) {
+    return '<div class="listen" data-id="' + s.id + '"><div class="lp-art"><span>' + (s.icon || "🌙") + "</span></div>" +
+      '<div class="lp-row"><button type="button" class="lp-btn lp-play" data-lp="play" aria-label="Play">▶</button>' +
+      '<button type="button" class="lp-btn lp-next" data-lp="next" aria-label="Next story">⏭</button></div>' +
+      '<input class="lp-seek" type="range" min="0" max="100" step="0.1" value="0" aria-label="Seek">' +
+      '<div class="lp-time small muted"><span class="lp-cur">0:00</span><span class="lp-dur"></span></div></div>';
+  }
+  // a few more from the same shelf first, then a mix from the other shelves
+  function moreList(s) {
+    var R = D.stories.filter(function (x) { return x.ready && D.bodies[x.id] && x.id !== s.id; });
+    var shelf = D.stories.filter(function (x) { return x.ready && D.bodies[x.id] && x.category === s.category; });
+    var i = shelf.map(function (x) { return x.id; }).indexOf(s.id);
+    var same = shelf.slice(i + 1).concat(shelf.slice(0, Math.max(i, 0))).filter(function (x) { return x.id !== s.id; }).slice(0, 3);
+    var others = {}, seed = 0, pick = [];
+    R.forEach(function (x) { if (x.category !== s.category) (others[x.category] = others[x.category] || []).push(x); });
+    for (var k = 0; k < s.id.length; k++) seed += s.id.charCodeAt(k);
+    var cats = Object.keys(others);
+    cats.forEach(function (c) { var a = others[c], r = seed % a.length; others[c] = a.slice(r).concat(a.slice(0, r)); });
+    if (cats.length) { var rot = seed % cats.length; cats = cats.slice(rot).concat(cats.slice(0, rot)); }
+    for (var round = 0; pick.length < 10 && round < 30; round++) cats.forEach(function (c) { if (pick.length < 10 && others[c][round]) pick.push(others[c][round]); });
+    return same.concat(pick);
+  }
+  function moreRow(s) {
+    var l = moreList(s); if (!l.length) return "";
+    return '<h2 class="row-title">' + t("moreStories") + '</h2><div class="row more-row">' + l.map(card).join("") + "</div>";
+  }
+  window.chamkuMore = function (id) { var s = story(id); return s ? moreList(s).map(function (x) { return x.id; }) : []; };
+  window.chamkuInfo = function (id) {
+    var s = story(id), b = s && D.bodies[id]; if (!b) return null;
+    return { id: id, title: L(s.title), icon: s.icon || "🌙", vid: b.video && (b.video[lang()] || b.video.en) };
+  };
+  window.chamkuT = function (k) { return t(k); };
+  window.chamkuRender = function () { render(true); };
   function pageStory(s) {
     var b = D.bodies[s.id], parts = b.parts[lang()] || b.parts.en, c = cat(s.category);
     var vid = b.video && (b.video[lang()] || b.video.en);
@@ -315,7 +358,8 @@
     return '<div class="story-page"><div class="bar"><span class="bar-l"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button><a class="icon-btn" href="#/c/' + c.id + '">' + t("back") + "</a></span>" +
       '<button class="icon-btn" data-act="fav" data-id="' + s.id + '" aria-pressed="' + isFav(s.id) + '">♥</button></div>' +
       '<div class="story-head"><h1>' + esc(L(s.title)) + '</h1><div class="meta">' + esc(L(b.source)) + " · " + esc(agesOf(s)) + " · " + s.minutes + " " + t("min") + "</div></div>" +
-      player + '<p class="small muted">🌙 ' + t("watchNote") + srcLinks([17, 6]) + "</p>" +
+      (vid ? modeTabs() : "") + (vid && listenMode() ? listenBox(s) : player) +
+      '<p class="small muted">' + (vid && listenMode() ? "🔒 " + t("listenNote") : "🌙 " + t("watchNote") + srcLinks([17, 6])) + "</p>" + moreRow(s) +
       '<div class="talk"><h3>💬 ' + t("talk") + "</h3><p>" + esc(L(b.talk)) + srcLinks([8, 14]) + "</p></div>" +
       '<details class="script"><summary>📜 ' + t("script") + '</summary><div class="tools"><button class="icon-btn" data-act="smaller">A−</button><button class="icon-btn" data-act="bigger">A+</button></div>' + body + "</details>" + feedback(s) +
       '<div class="end"><img class="end-img" src="glo-lying.webp" alt=""><p>' + t("endText") + '</p><button class="pill ghost" data-act="night">' + t("nightOn") + "</button></div></div>";

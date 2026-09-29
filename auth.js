@@ -131,8 +131,12 @@
       var data = { maxSec: Math.round(maxT), pct: pct, dur: Math.round(d), updated: firebase.firestore.FieldValue.serverTimestamp() };
       for (var k in extra) data[k] = extra[k];
       if (!doc) {
+        if (v.__startAt) { maxT = Math.max(maxT, v.__startAt); v.__startAt = 0; }
         doc = db.collection("plays").doc();
-        data.uid = user.uid; data.email = user.email || ""; data.story = sid; data.lang = hi() ? "hi" : "en";
+        data.uid = user.uid; data.email = user.email || ""; data.story = v.getAttribute("data-story") || sid; data.lang = hi() ? "hi" : "en";
+        data.mode = v.tagName === "AUDIO" ? "listen" : "watch";
+        if (v.__contOf) { data.cont = true; data.of = v.__contOf; v.__contOf = null; }
+        v.__caDoc = doc.id;
         data.started = firebase.firestore.FieldValue.serverTimestamp();
         doc.set(data).catch(function () {});
       } else doc.update(data).catch(function () {});
@@ -155,6 +159,8 @@
       [25, 50, 75].forEach(function (q) { if (d && maxT >= d * q / 100 && !sent["p" + q]) { sent["p" + q] = ex["p" + q] = true; } });
       if (Object.keys(ex).length || Date.now() - lastSave > 30000) save(ex);
     });
+    // the listen-mode player reuses one audio element: close the old record when it switches story
+    v.addEventListener("chamku:switch", function () { if (user && doc) save({}); doc = null; sent = {}; maxT = 0; });
     v.addEventListener("ended", function () { maxT = v.duration || maxT; save({ done: true }); });
     v.addEventListener("pause", function () { if (user && doc) save({}); });
     window.addEventListener("pagehide", function () { if (user && doc) save({}); });
@@ -185,9 +191,12 @@
       root.textContent = "Loading…";
       Promise.all([db.collection("plays").orderBy("started", "desc").limit(5000).get(), db.collection("users").get(),
         fetch("data.json").then(function (x) { return x.json(); }).catch(function () { return { stories: [] }; })]).then(function (r) {
-        var rows = {}, users = r[1].size;
-        r[0].forEach(function (d) {
-          var p = d.data(), s = rows[p.story] || (rows[p.story] = { plays: 0, people: {}, m2: 0, p50: 0, done: 0, early: 0 });
+        var rows = {}, users = r[1].size, byId = {}, conts = [];
+        r[0].forEach(function (d) { var p = d.data(); if (p.cont) conts.push(p); else byId[d.id] = p; });
+        // a story that carried on as sound after the phone was locked: add its progress to the original play
+        conts.forEach(function (c) { var o = byId[c.of]; if (!o) return; ["m2", "p25", "p50", "p75", "done"].forEach(function (k) { if (c[k]) o[k] = true; }); o.maxSec = Math.max(o.maxSec || 0, c.maxSec || 0); });
+        Object.keys(byId).forEach(function (id) {
+          var p = byId[id], s = rows[p.story] || (rows[p.story] = { plays: 0, people: {}, m2: 0, p50: 0, done: 0, early: 0 });
           s.plays++; s.people[p.uid] = 1; if (p.m2) s.m2++; if (p.p50) s.p50++; if (p.done) s.done++;
           if (!p.m2 && (p.maxSec || 0) < 120 && !p.done) s.early++;
         });
@@ -195,7 +204,7 @@
         var list = Object.keys(rows).map(function (k) { var s = rows[k]; s.id = k; s.early_pct = Math.round(100 * s.early / s.plays); return s; })
           .sort(function (a, b) { return b.early_pct - a.early_pct; });
         function pc(a, b) { return b ? Math.round(100 * a / b) + "%" : "–"; }
-        root.innerHTML = "<p><b>" + users + "</b> parents signed up · <b>" + r[0].size + "</b> plays</p>" +
+        root.innerHTML = "<p><b>" + users + "</b> parents signed up · <b>" + Object.keys(byId).length + "</b> plays</p>" +
           '<p class="small muted">Sorted by early stops. "Stopped early" = stopped before 2 minutes. Not finishing is fine at bedtime (the child may fall asleep); stopping early is the warning sign.</p>' +
           '<div style="overflow-x:auto"><table class="ca-table"><tr><th>Story</th><th>Plays</th><th>People</th><th>Stopped early</th><th>Past 2 min</th><th>Half</th><th>Finished</th></tr>' +
           list.map(function (s) {
@@ -242,6 +251,6 @@
   }
   window.ChamkuMenu = { open: openMenu, close: closeMenu };
 
-  window.ChamkuAuth = { init: init, open: openSheet, user: function () { return user; } };
+  window.ChamkuAuth = { init: init, open: openSheet, user: function () { return user; }, track: track };
   init();
 })();

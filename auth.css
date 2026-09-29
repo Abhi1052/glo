@@ -32,3 +32,26 @@ header.top > .brand { margin-right: auto; }
 .cm-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 8px; border-radius: 10px; color: inherit; text-decoration: none; background: none; border: 0; font: inherit; text-align: left; }
 .cm-item:hover, .cm-item:active { background: var(--card); }
 .cm-item span { width: 24px; text-align: center; }
+
+/* ---------- watch / listen-only switch ---------- */
+.mode-tabs { display: flex; gap: 6px; background: var(--card); border: 1px solid var(--line); border-radius: 99px; padding: 4px; margin: 4px 0 10px; }
+.mode-tabs button { flex: 1; border: 0; background: none; color: var(--muted); font: inherit; font-weight: 600; padding: 8px 6px; border-radius: 99px; }
+.mode-tabs button.on { background: var(--amber); color: #2a1a00; }
+.listen { background: linear-gradient(160deg, #1b2450, #0f1532); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 16px 12px; text-align: center; }
+.lp-art { width: 112px; height: 112px; margin: 0 auto 12px; border-radius: 28px; display: grid; place-items: center; font-size: 58px;
+  background: radial-gradient(circle, rgba(244,185,90,.28), rgba(244,185,90,.05) 70%); box-shadow: 0 0 36px rgba(244,185,90,.25); }
+.lp-row { display: flex; justify-content: center; align-items: center; gap: 18px; margin-bottom: 10px; }
+.lp-btn { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line); background: #252c4f; color: var(--text); font-size: 20px; display: grid; place-items: center; }
+.lp-btn.lp-play { width: 68px; height: 68px; background: var(--amber); color: #2a1a00; font-size: 26px; border: 0; }
+.lp-seek { width: 100%; accent-color: var(--amber); }
+.lp-time { display: flex; justify-content: space-between; }
+/* small bar at the bottom while a story plays in the background */
+.lp-mini { position: fixed; left: 8px; right: 8px; bottom: calc(66px + env(safe-area-inset-bottom)); z-index: 30; display: flex; align-items: center; gap: 8px;
+  background: #1b2450; border: 1px solid rgba(244,185,90,.35); border-radius: 16px; padding: 8px 10px; box-shadow: 0 8px 24px rgba(0,0,0,.45); }
+.lp-mini .lp-mi { font-size: 24px; text-decoration: none; }
+.lp-mini .lp-mt { flex: 1; min-width: 0; color: var(--text); text-decoration: none; font-weight: 600; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lp-mini button { border: 0; background: #252c4f; color: var(--text); width: 38px; height: 38px; border-radius: 50%; font-size: 15px; flex: none; }
+.lp-mini button[data-lp="mplay"] { background: var(--amber); color: #2a1a00; }
+body.has-mini #app { padding-bottom: 70px; }
+/* more stories row under a story */
+.more-row .card { flex: 0 0 64%; max-width: 260px; }
