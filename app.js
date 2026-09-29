@@ -130,7 +130,8 @@
     var who = (S.child && S.child.name ? esc(S.child.name) + " · " : "") + (st ? esc(L(stageObj(st).ages)) : "");
     return '<header class="top"><a class="brand" href="#/home"><img class="avatar" src="glo-face.webp" alt="Chamku"><div><h1>Chamku</h1><p>' + t("tagline") + "</p></div></a>" +
       '<div class="top-r">' + (who ? '<button class="who" data-act="settings">' + who + "</button>" : "") +
-      '<button class="lang-btn" data-act="settings">🌐 ' + esc(D.languages.filter(function (l) { return l.code === lang(); })[0].label) + "</button></div></header>" +
+      '<button class="lang-btn" data-act="settings">🌐 ' + esc(D.languages.filter(function (l) { return l.code === lang(); })[0].label) + "</button>" +
+      '<button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button></div></header>' +
       '<a class="searchbar" href="#/search">🔍 <span>' + t("search") + "</span></a>";
   }
 
@@ -312,7 +313,7 @@
         p.text.split("\n").map(function (l) { return "<p>" + esc(l) + "</p>"; }).join("") + "</section>";
     }).join("");
     return '<div class="story-page"><div class="bar"><a class="icon-btn" href="#/c/' + c.id + '">' + t("back") + "</a>" +
-      '<button class="icon-btn" data-act="fav" data-id="' + s.id + '" aria-pressed="' + isFav(s.id) + '">♥</button></div>' +
+      '<span class="bar-r"><button class="icon-btn" data-act="fav" data-id="' + s.id + '" aria-pressed="' + isFav(s.id) + '">♥</button><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button></span></div>' +
       '<div class="story-head"><h1>' + esc(L(s.title)) + '</h1><div class="meta">' + esc(L(b.source)) + " · " + esc(agesOf(s)) + " · " + s.minutes + " " + t("min") + "</div></div>" +
       player + '<p class="small muted">🌙 ' + t("watchNote") + srcLinks([17, 6]) + "</p>" +
       '<div class="talk"><h3>💬 ' + t("talk") + "</h3><p>" + esc(L(b.talk)) + srcLinks([8, 14]) + "</p></div>" +
@@ -379,12 +380,14 @@
     }, 5000);
   }
 
+  window.chamkuOpenSettings = function () { openSettings(false); };
   /* ---------- clicks & typing ---------- */
   app.addEventListener("click", function (e) {
     var b = e.target.closest("[data-act],[data-stage],[data-age]"); if (!b) return;
     if (b.hasAttribute("data-age")) { e.preventDefault(); filterAge = b.getAttribute("data-age") || null; S.shown = PAGE; render(true); return; }
     if (b.hasAttribute("data-stage")) { S.parentStage = b.getAttribute("data-stage"); render(true); return; }
     var act = b.getAttribute("data-act");
+    if (act === "menu") { if (window.ChamkuMenu) window.ChamkuMenu.open(D, lang()); return; }
     if (act === "settings") openSettings(false);
     else if (act === "night") openNight();
     else if (act === "more") { S.shown += PAGE; render(true); }

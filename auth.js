@@ -150,9 +150,13 @@
       lastSave = Date.now();
     }
     v.addEventListener("play", function () {
-      if (!auth) return; // login not set up yet: let it play
-      if (!user) { v.pause(); waiting = [function () { v.play(); }]; openSheet(); return; }
-      if (!doc) save({});
+      if (user) { if (!doc) save({}); return; }
+      v.pause();
+      init().then(function (ok) {
+        if (!ok) { v.__free = true; v.play(); return; }           // login not available: let it play
+        if (user) { v.play(); return; }
+        waiting = [function () { v.play(); }]; openSheet();
+      });
     });
     v.addEventListener("timeupdate", function () {
       if (!user || v.seeking) return;
@@ -212,6 +216,42 @@
       }).catch(function (e) { root.textContent = "Could not load: " + (e && e.message); });
     });
   }
+
+  /* ---------- hamburger menu: account + categories + links ---------- */
+  var drawer = null;
+  function closeMenu() { if (drawer) { drawer.remove(); drawer = null; } }
+  function openMenu(D, lang) {
+    closeMenu();
+    var hiL = lang === "hi";
+    function L(o) { return o ? (o[lang] || o.en || "") : ""; }
+    function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+    var acct = user
+      ? '<div class="cm-acct"><span>👤 ' + esc(user.email || user.displayName || "") + '</span><button class="link" id="cm-out" type="button">' + (hiL ? "Sign out" : "Sign out") + "</button></div>"
+      : '<button class="pill wide" id="cm-in" type="button">' + (hiL ? "Sign in करें" : "Sign in") + "</button>";
+    var cats = (D && D.categories || []).map(function (c) {
+      return '<a class="cm-item" href="#/c/' + c.id + '"><span>' + c.icon + "</span>" + esc(L(c.name)) + "</a>";
+    }).join("");
+    var links = [["#/home", "🏠", hiL ? "Home" : "Home"], ["#/search", "🔍", hiL ? "Search" : "Search"], ["#/favs", "♥", hiL ? "मेरी पसंद" : "Favourites"],
+      ["#/ask", "💬", hiL ? "चमकू से पूछें" : "Ask Chamku"], ["#/parents", "🔬", hiL ? "माता-पिता" : "Parents"]].map(function (x) {
+      return '<a class="cm-item" href="' + x[0] + '"><span>' + x[1] + "</span>" + x[2] + "</a>";
+    }).join("");
+    var admin = user && ADMINS.indexOf((user.email || "").toLowerCase()) >= 0 ? '<a class="cm-item" href="#/report"><span>📊</span>Story report</a>' : "";
+    drawer = document.createElement("div");
+    drawer.className = "cm-wrap";
+    drawer.innerHTML = '<aside class="cm-panel" role="dialog" aria-modal="true"><div class="cm-head"><b>Chamku</b><button class="icon-btn" id="cm-x" aria-label="Close">✕</button></div>' +
+      acct + '<h4>' + (hiL ? "Categories" : "Categories") + "</h4>" + cats + "<h4>" + (hiL ? "और" : "More") + "</h4>" + links + admin +
+      '<button class="cm-item" id="cm-set" type="button"><span>🌐</span>' + (hiL ? "भाषा / बच्चे की उम्र" : "Language & child's age") + "</button>" +
+      '<a class="cm-item" href="privacy.html"><span>🔒</span>Privacy</a></aside>';
+    document.body.appendChild(drawer);
+    drawer.addEventListener("click", function (e) { if (e.target === drawer || e.target.closest("a.cm-item")) closeMenu(); });
+    drawer.querySelector("#cm-x").onclick = closeMenu;
+    drawer.querySelector("#cm-set").onclick = function () { closeMenu(); if (window.chamkuOpenSettings) window.chamkuOpenSettings(); };
+    var bi = drawer.querySelector("#cm-in");
+    if (bi) bi.onclick = function () { closeMenu(); init().then(function (ok) { if (ok) { waiting = []; openSheet(); } }); };
+    var bo = drawer.querySelector("#cm-out");
+    if (bo) bo.onclick = function () { try { google.accounts.id.disableAutoSelect(); } catch (x) {} auth.signOut(); closeMenu(); };
+  }
+  window.ChamkuMenu = { open: openMenu, close: closeMenu };
 
   window.ChamkuAuth = { init: init, open: openSheet, user: function () { return user; } };
   init();
