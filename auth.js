@@ -117,10 +117,14 @@
 
   // signed-in line under the story player
   function paintBadge() {
-    document.querySelectorAll(".ca-who").forEach(function (el) { el.remove(); });
+    var who = user ? (user.email || user.displayName || "") : "";
+    // only touch the page when something changed (avoids a busy loop with the page watcher below)
+    document.querySelectorAll(".ca-who").forEach(function (el) { if (!user || el.getAttribute("data-who") !== who) el.remove(); });
     if (!user) return;
     document.querySelectorAll("video.player").forEach(function (v) {
-      var p = document.createElement("p"); p.className = "ca-who small muted";
+      var nx = v.nextElementSibling;
+      if (nx && nx.classList.contains("ca-who")) return;
+      var p = document.createElement("p"); p.className = "ca-who small muted"; p.setAttribute("data-who", who);
       p.innerHTML = "👤 " + (user.email || user.displayName || "") + ' · <button class="link" type="button">' + T("Sign out", "Sign out") + "</button>";
       p.querySelector("button").onclick = function () { try { google.accounts.id.disableAutoSelect(); } catch (e) {} auth.signOut(); };
       v.insertAdjacentElement("afterend", p);
@@ -167,7 +171,16 @@
     if (user) paintBadge();
     if (/^#\/report/.test(location.hash)) report();
   }
-  new MutationObserver(function () { clearTimeout(scan.t); scan.t = setTimeout(scan, 50); }).observe(document.documentElement, { childList: true, subtree: true });
+  new MutationObserver(function (list) {
+    // ignore changes we made ourselves (the signed-in line, the sign-in sheet)
+    var ours = list.every(function (m) {
+      return [].concat([].slice.call(m.addedNodes), [].slice.call(m.removedNodes)).every(function (n) {
+        return n.nodeType === 1 && (n.classList.contains("ca-who") || n.classList.contains("ca-wrap"));
+      });
+    });
+    if (ours) return;
+    clearTimeout(scan.t); scan.t = setTimeout(scan, 80);
+  }).observe(document.getElementById("app") || document.body, { childList: true, subtree: true });
 
   /* ---------- #/report (admins only) ---------- */
   function report() {
