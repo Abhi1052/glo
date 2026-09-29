@@ -142,3 +142,17 @@
 
   window.ChamkuPlayer = { audio: A, next: next, load: load, current: function () { return cur; } };
 })();
+
+/* Mark a story as watched once half of it has been played (video or listen mode). Saved on this phone only. */
+(function () {
+  function mark(id) {
+    if (!id) return;
+    try { var w = JSON.parse(localStorage.getItem("glo.watched") || "{}"); if (!w[id]) { w[id] = Date.now(); localStorage.setItem("glo.watched", JSON.stringify(w)); } } catch (e) {}
+  }
+  function idOf(v) { var m = location.hash.match(/^#\/s\/([^/?]+)/); return v.getAttribute("data-story") || (m ? decodeURIComponent(m[1]) : ""); }
+  document.addEventListener("timeupdate", function (e) {
+    var v = e.target; if (!v || !(v.tagName === "VIDEO" || v.tagName === "AUDIO") || !v.duration) return;
+    if (v.currentTime >= v.duration * 0.5) mark(idOf(v));
+  }, true);
+  document.addEventListener("ended", function (e) { var v = e.target; if (v && (v.tagName === "VIDEO" || v.tagName === "AUDIO")) mark(idOf(v)); }, true);
+})();

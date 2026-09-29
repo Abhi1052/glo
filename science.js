@@ -11,6 +11,7 @@
   function T(en, h) { return hi() ? h : en; }
   function esc(x) { return String(x == null ? "" : x).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function storyId() { var m = location.hash.match(/^#\/s\/([^/?]+)/); return m ? decodeURIComponent(m[1]) : ""; }
+  function baseId(id) { return id.replace(/-(bn|mr|ta|te|kn|ml)$/, ""); }   // a story in another language uses the same science
 
   function cite(line) {
     var s = line.authors ? esc(line.authors) + " (" + esc(line.year || "n.d.") + "). " : "";
@@ -71,8 +72,8 @@
     var id = storyId(), page = document.querySelector(".story-page");
     if (id && page && !page.querySelector(".sci-box")) {
       get().then(function (d) {
-        if (!d || !d.stories[id] || page.querySelector(".sci-box") || storyId() !== id) return;
-        var html = block(d, id); if (!html) return;
+        if (!d || !d.stories[baseId(id)] || page.querySelector(".sci-box") || storyId() !== id) return;
+        var html = block(d, baseId(id)); if (!html) return;
         var anchor = page.querySelector(".fbbox") || page.querySelector(".talk");
         var tmp = document.createElement("div"); tmp.innerHTML = html;
         if (anchor) anchor.insertAdjacentElement("afterend", tmp.firstChild); else page.appendChild(tmp.firstChild);
