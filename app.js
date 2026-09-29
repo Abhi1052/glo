@@ -20,6 +20,7 @@
       fbTitle: "How did your child find this story?", fbGot: "How well did your child understand the story?", fbGotLo: "1 = not at all", fbGotHi: "10 = fully", fbInt: "How interested was your child, from start to end?", fbIntLo: "1 = lost interest early", fbIntHi: "10 = hooked till the end", fbSend: "Submit", fbDone: "Sent", fbThanks: "Thank you! Your answer has been sent.", fbFail: "Could not send right now. We will try again automatically.", fbPick: "Please tap a number for both questions.", soon: "Coming soon", readyNow: "Ready", start: "▶ Watch", min: "min",
       builds: "Builds", why: "Why this helps", sources: "Sources", sample: "Meanwhile, watch our sample story",
       back: "← Back", talk: "Talk together",
+      addChild: "Child's name & age", titleTag: "Bedtime stories",
       mWatch: "Watch", mListen: "Listen only", mAlbum: "Bedtime stories", moreStories: "More stories →",
       listenNote: "You can lock the phone — the story keeps playing. Pause it or skip to the next story from the lock screen.",
       watchNote: "Chamku tells this story. He says hello, then shrinks to a tiny light, and the screen stays almost dark for the rest of the story — so it helps your child sleep instead of waking them up.",
@@ -45,6 +46,7 @@
       fbTitle: "बच्चे को ये कहानी कैसी लगी?", fbGot: "बच्चे को कहानी कितनी समझ आई?", fbGotLo: "1 = बिल्कुल नहीं", fbGotHi: "10 = पूरी", fbInt: "शुरू से आख़िर तक बच्चे का मन कितना लगा रहा?", fbIntLo: "1 = जल्दी ऊब गया", fbIntHi: "10 = आख़िर तक मन लगा रहा", fbSend: "Submit करें", fbDone: "भेज दिया", fbThanks: "धन्यवाद! आपका जवाब भेज दिया गया है।", fbFail: "अभी नहीं भेज पाए। हम अपने आप फिर से कोशिश करेंगे।", fbPick: "कृपया दोनों सवालों के लिए एक number चुनिए।", soon: "जल्द आ रही है", readyNow: "तैयार", start: "▶ देखें", min: "मिनट",
       builds: "क्या सिखाती है", why: "ये क्यों मदद करता है", sources: "स्रोत", sample: "तब तक हमारी नमूना कहानी देखिए",
       back: "← वापस", talk: "साथ में बात करें",
+      addChild: "बच्चे का नाम और उम्र", titleTag: "सोने की कहानियाँ",
       mWatch: "देखें", mListen: "सिर्फ़ सुनें", mAlbum: "सोने की कहानियाँ", moreStories: "और कहानियाँ →",
       listenNote: "फ़ोन lock कर सकते हैं — कहानी चलती रहेगी। Lock screen से रोक सकते हैं या अगली कहानी चला सकते हैं।",
       watchNote: "ये कहानी चमकू सुनाता है। वो नमस्ते कहता है, फिर एक नन्ही-सी रोशनी बन जाता है, और बाकी कहानी में स्क्रीन लगभग अँधेरी रहती है — ताकि बच्चा जागे नहीं, सो जाए।",
@@ -132,18 +134,17 @@
   function header() {
     var st = myStage();
     var who = (S.child && S.child.name ? esc(S.child.name) + " · " : "") + (st ? esc(L(stageObj(st).ages)) : "");
-    return '<header class="top"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button><a class="brand" href="#/home"><img class="avatar" src="glo-face.webp" alt="Chamku"><div><h1>Chamku</h1><p>' + t("tagline") + "</p></div></a>" +
-      '<div class="top-r">' + (who ? '<button class="who" data-act="settings">' + who + "</button>" : "") +
+    return '<header class="top"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button><div class="brand"><a href="#/home"><img class="avatar" src="glo-face.webp" alt="Chamku"></a><div><a href="#/home"><h1>Chamku</h1></a>' +
+      '<button class="kid-line" data-act="settings">' + (who || "+ " + t("addChild")) + "</button></div></div>" +
+      '<div class="top-r">' +
       '<button class="lang-btn" data-act="langtoggle">🌐 ' + esc(D.languages.filter(function (l) { return l.code === lang(); })[0].label) + "</button>" +
-      '</div></header>' +
-      '<a class="searchbar" href="#/search">🔍 <span>' + t("search") + "</span></a>";
+      '</div></header>';
   }
 
   /* ---------- HOME (store-style) ---------- */
   function pageHome() {
     var st = myStage();
-    var circles = '<nav class="circles">' +
-      (st ? circle("#/age/" + st, '<img src="glo-face.webp" alt="">', S.child && S.child.name ? t("forName", { name: S.child.name }) : t("forAge", { ages: L(stageObj(st).ages) }), "c-star") : "") +
+    var circles = '<nav class="circles home-cats">' +
       D.categories.map(function (c) { return circle("#/c/" + c.id, c.icon, L(c.name), "c-" + c.id); }).join("") + "</nav>";
     var banners = '<div class="banners" id="banners">' + D.banners.map(function (b) {
       return '<a class="banner b-' + b.id + (b.img ? " has-img" : "") + '" href="' + b.link + '"' + (b.img ? ' style="background-image:linear-gradient(90deg,rgba(6,9,24,.94) 38%,rgba(6,9,24,.35) 75%,rgba(6,9,24,.1)),url(' + b.img + ')"' : "") + '><div class="b-ic">' + b.icon + "</div><div><h2>" + esc(L(b.title)) + "</h2><p>" + esc(L(b.text)) + "</p></div></a>";
@@ -162,7 +163,7 @@
     var calm = D.stories.filter(function (s) { return s.category === "sleep" && inStage(s, st); }).slice(0, 10);
     var classics = D.stories.filter(function (s) { return s.category === "classics"; }).sort(readyFirst).slice(0, 10);
     var favs = D.stories.filter(function (s) { return isFav(s.id); });
-    return header() + circles + banners +
+    return header() + circles + '<a class="searchbar" href="#/search">🔍 <span>' + t("search") + "</span></a>" + banners +
       (st === "s0" ? '<div class="note">' + t("babyNote") + srcLinks([4]) + "</div>" : "") +
       row(st ? t("pickedFor", { ages: esc(L(stageObj(st).ages)) }) : t("allAges"), st ? "#/age/" + st : "#/cats", picked) +
       quads + ages +
@@ -501,7 +502,7 @@
     nav.innerHTML = [["home", "🏠", t("home")], ["cats", "🗂️", t("categories")], ["search", "🔍", t("searchTab")], ["ask", "💬", t("ask")], ["parents", "🔬", t("parents")]]
       .map(function (x) { return '<a href="#/' + x[0] + '" class="' + (x[0] === tab ? "on" : "") + '"><span>' + x[1] + "</span>" + esc(x[2]) + "</a>"; }).join("");
     nav.hidden = false;
-    document.title = "Chamku — " + t("tagline");
+    document.title = "Chamku — " + t("titleTag");
     if (!same) window.scrollTo(0, 0);
     if (tab === "search" && !same) { var q = document.getElementById("q"); if (q) q.focus(); }
     startBanners();

@@ -279,6 +279,13 @@
     var acct = real()
       ? '<div class="cm-acct"><span>👤 ' + esc(user.email || user.displayName || "") + '</span><button class="link" id="cm-out" type="button">' + (hiL ? "Sign out" : "Sign out") + "</button></div>"
       : '<button class="pill wide" id="cm-in" type="button">' + (hiL ? "Sign in करें" : "Sign in") + "</button>";
+    function kidText() {
+      var k = null; try { k = JSON.parse(localStorage.getItem("glo.child") || "null"); } catch (e) {}
+      var hasAge = k && k.age !== null && k.age !== undefined && k.age !== "";
+      if (!k || (!k.name && !hasAge)) return hiL ? "बच्चे का नाम और उम्र" : "Child's name & age";
+      var age = hasAge ? (k.age === 0 ? (hiL ? "1 साल से कम" : "under 1") : k.age + (hiL ? " साल" : (k.age === 1 ? " year" : " years"))) : "";
+      return esc([k.name, age].filter(Boolean).join(" · ")) + ' <small class="cm-edit">' + (hiL ? "बदलें" : "change") + "</small>";
+    }
     var cats = (D && D.categories || []).map(function (c) {
       return '<a class="cm-item" href="#/c/' + c.id + '"><span>' + c.icon + "</span>" + esc(L(c.name)) + "</a>";
     }).join("");
@@ -293,7 +300,7 @@
       acct + '<h4>' + (hiL ? "Categories" : "Categories") + "</h4>" + cats + "<h4>" + (hiL ? "और" : "More") + "</h4>" + links + admin +
       "<h4>" + (hiL ? "भाषा" : "Language") + '</h4><div class="cm-langs">' + (D.languages || []).filter(function (l) { return l.ready; }).map(function (l) {
         return '<button type="button" data-l="' + l.code + '" class="' + (l.code === lang ? "on" : "") + '">' + l.label + "</button>"; }).join("") + "</div>" +
-      '<button class="cm-item" id="cm-set" type="button"><span>🧒</span>' + (hiL ? "बच्चे का नाम और उम्र" : "Child's name & age") + "</button>" +
+      '<button class="cm-item" id="cm-set" type="button"><span>🧒</span>' + kidText() + "</button>" +
       '<a class="cm-item" href="privacy.html"><span>🔒</span>Privacy</a></aside>';
     document.body.appendChild(drawer);
     drawer.addEventListener("click", function (e) { if (e.target === drawer || e.target.closest("a.cm-item")) closeMenu(); });
