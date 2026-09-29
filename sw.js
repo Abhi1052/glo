@@ -1,5 +1,5 @@
 /* Chamku service worker — keeps the app working offline. Bump VERSION on every release. */
-var VERSION = "chamku-09290759";
+var VERSION = "chamku-09290828";
 var SHELL = ["./", "index.html", "style.css", "app.js", "data.json", "manifest.webmanifest", "icon-192.webp", "icon-512.webp", "glo-face.webp", "glo-hero.webp"];
 
 self.addEventListener("install", function (e) {
