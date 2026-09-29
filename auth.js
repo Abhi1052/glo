@@ -115,20 +115,9 @@
     if (fallback) fallback.style.display = "none";
   }
 
-  // signed-in line under the story player
+  // account now lives only in the ☰ menu; clear any old line under the player
   function paintBadge() {
-    var who = user ? (user.email || user.displayName || "") : "";
-    // only touch the page when something changed (avoids a busy loop with the page watcher below)
-    document.querySelectorAll(".ca-who").forEach(function (el) { if (!user || el.getAttribute("data-who") !== who) el.remove(); });
-    if (!user) return;
-    document.querySelectorAll("video.player").forEach(function (v) {
-      var nx = v.nextElementSibling;
-      if (nx && nx.classList.contains("ca-who")) return;
-      var p = document.createElement("p"); p.className = "ca-who small muted"; p.setAttribute("data-who", who);
-      p.innerHTML = "👤 " + (user.email || user.displayName || "") + ' · <button class="link" type="button">' + T("Sign out", "Sign out") + "</button>";
-      p.querySelector("button").onclick = function () { try { google.accounts.id.disableAutoSelect(); } catch (e) {} auth.signOut(); };
-      v.insertAdjacentElement("afterend", p);
-    });
+    document.querySelectorAll(".ca-who").forEach(function (el) { el.remove(); });
   }
 
   /* ---------- play tracking ---------- */

@@ -128,10 +128,10 @@
   function header() {
     var st = myStage();
     var who = (S.child && S.child.name ? esc(S.child.name) + " · " : "") + (st ? esc(L(stageObj(st).ages)) : "");
-    return '<header class="top"><a class="brand" href="#/home"><img class="avatar" src="glo-face.webp" alt="Chamku"><div><h1>Chamku</h1><p>' + t("tagline") + "</p></div></a>" +
+    return '<header class="top"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button><a class="brand" href="#/home"><img class="avatar" src="glo-face.webp" alt="Chamku"><div><h1>Chamku</h1><p>' + t("tagline") + "</p></div></a>" +
       '<div class="top-r">' + (who ? '<button class="who" data-act="settings">' + who + "</button>" : "") +
       '<button class="lang-btn" data-act="settings">🌐 ' + esc(D.languages.filter(function (l) { return l.code === lang(); })[0].label) + "</button>" +
-      '<button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button></div></header>' +
+      '</div></header>' +
       '<a class="searchbar" href="#/search">🔍 <span>' + t("search") + "</span></a>";
   }
 
@@ -312,8 +312,8 @@
       return '<section class="part"><h2>' + esc(p.heading) + '</h2><div class="dir">(' + esc(p.direction) + ")</div>" +
         p.text.split("\n").map(function (l) { return "<p>" + esc(l) + "</p>"; }).join("") + "</section>";
     }).join("");
-    return '<div class="story-page"><div class="bar"><a class="icon-btn" href="#/c/' + c.id + '">' + t("back") + "</a>" +
-      '<span class="bar-r"><button class="icon-btn" data-act="fav" data-id="' + s.id + '" aria-pressed="' + isFav(s.id) + '">♥</button><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button></span></div>' +
+    return '<div class="story-page"><div class="bar"><span class="bar-l"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button><a class="icon-btn" href="#/c/' + c.id + '">' + t("back") + "</a></span>" +
+      '<button class="icon-btn" data-act="fav" data-id="' + s.id + '" aria-pressed="' + isFav(s.id) + '">♥</button></div>' +
       '<div class="story-head"><h1>' + esc(L(s.title)) + '</h1><div class="meta">' + esc(L(b.source)) + " · " + esc(agesOf(s)) + " · " + s.minutes + " " + t("min") + "</div></div>" +
       player + '<p class="small muted">🌙 ' + t("watchNote") + srcLinks([17, 6]) + "</p>" +
       '<div class="talk"><h3>💬 ' + t("talk") + "</h3><p>" + esc(L(b.talk)) + srcLinks([8, 14]) + "</p></div>" +
