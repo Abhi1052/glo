@@ -12,7 +12,7 @@
   /* ---------- words on screen ---------- */
   var T = {
     en: {
-      tagline: "The light that comes back every night", search: "Search stories, habits, feelings…",
+      tagline: "Chamku the storyteller", search: "Search stories, habits, feelings…",
       welcome: "Welcome to Chamku", welcomeText: "Every night, Chamku the firefly visits with a story made for your child's age.",
       language: "Language", childName: "Child's name (optional)", age: "Age", under1: "Under 1", year: "year", years: "years",
       begin: "Let's begin", skip: "Skip for now", privacy: "Your child's name and age stay on this phone only. No ads.",
@@ -20,7 +20,7 @@
       fbTitle: "How did your child find this story?", fbGot: "How well did your child understand the story?", fbGotLo: "1 = not at all", fbGotHi: "10 = fully", fbInt: "How interested was your child, from start to end?", fbIntLo: "1 = lost interest early", fbIntHi: "10 = hooked till the end", fbSend: "Submit", fbDone: "Sent", fbThanks: "Thank you! Your answer has been sent.", fbFail: "Could not send right now. We will try again automatically.", fbPick: "Please tap a number for both questions.", soon: "Coming soon", readyNow: "Ready", start: "▶ Watch", min: "min",
       builds: "Builds", why: "Why this helps", sources: "Sources", sample: "Meanwhile, watch our sample story",
       back: "← Back", talk: "Talk together",
-      addChild: "Child's name & age", titleTag: "Bedtime stories",
+      addChild: "Child's name & age", titleTag: "Chamku the Storyteller",
       mWatch: "Watch", mListen: "Listen only", mAlbum: "Bedtime stories", moreStories: "More stories →",
       listenNote: "You can lock the phone — the story keeps playing. Pause it or skip to the next story from the lock screen.",
       watchNote: "Chamku tells this story. He says hello, then shrinks to a tiny light, and the screen stays almost dark for the rest of the story — so it helps your child sleep instead of waking them up.",
@@ -38,7 +38,7 @@
       allCats: "All categories", results: "{n} stories", calmNow: "Calm & sleepy picks", classicsRow: "Classic tales"
     },
     hi: {
-      tagline: "हर रात लौट आने वाली रोशनी", search: "कहानी, आदत, भावना खोजें…",
+      tagline: "कहानी सुनाने वाला चमकू", search: "कहानी, आदत, भावना खोजें…",
       welcome: "चमकू में आपका स्वागत है", welcomeText: "हर रात जुगनू चमकू आता है — आपके बच्चे की उम्र के हिसाब से एक कहानी लेकर।",
       language: "भाषा", childName: "बच्चे का नाम (अगर चाहें)", age: "उम्र", under1: "1 साल से कम", year: "साल", years: "साल",
       begin: "चलिए शुरू करें", skip: "अभी छोड़ें", privacy: "बच्चे का नाम और उम्र सिर्फ़ इसी फ़ोन पर रहते हैं। कोई विज्ञापन नहीं।",
@@ -46,7 +46,7 @@
       fbTitle: "बच्चे को ये कहानी कैसी लगी?", fbGot: "बच्चे को कहानी कितनी समझ आई?", fbGotLo: "1 = बिल्कुल नहीं", fbGotHi: "10 = पूरी", fbInt: "शुरू से आख़िर तक बच्चे का मन कितना लगा रहा?", fbIntLo: "1 = जल्दी ऊब गया", fbIntHi: "10 = आख़िर तक मन लगा रहा", fbSend: "Submit करें", fbDone: "भेज दिया", fbThanks: "धन्यवाद! आपका जवाब भेज दिया गया है।", fbFail: "अभी नहीं भेज पाए। हम अपने आप फिर से कोशिश करेंगे।", fbPick: "कृपया दोनों सवालों के लिए एक number चुनिए।", soon: "जल्द आ रही है", readyNow: "तैयार", start: "▶ देखें", min: "मिनट",
       builds: "क्या सिखाती है", why: "ये क्यों मदद करता है", sources: "स्रोत", sample: "तब तक हमारी नमूना कहानी देखिए",
       back: "← वापस", talk: "साथ में बात करें",
-      addChild: "बच्चे का नाम और उम्र", titleTag: "सोने की कहानियाँ",
+      addChild: "बच्चे का नाम और उम्र", titleTag: "कहानी सुनाने वाला चमकू",
       mWatch: "देखें", mListen: "सिर्फ़ सुनें", mAlbum: "सोने की कहानियाँ", moreStories: "और कहानियाँ →",
       listenNote: "फ़ोन lock कर सकते हैं — कहानी चलती रहेगी। Lock screen से रोक सकते हैं या अगली कहानी चला सकते हैं।",
       watchNote: "ये कहानी चमकू सुनाता है। वो नमस्ते कहता है, फिर एक नन्ही-सी रोशनी बन जाता है, और बाकी कहानी में स्क्रीन लगभग अँधेरी रहती है — ताकि बच्चा जागे नहीं, सो जाए।",
@@ -502,7 +502,7 @@
     nav.innerHTML = [["home", "🏠", t("home")], ["cats", "🗂️", t("categories")], ["search", "🔍", t("searchTab")], ["ask", "💬", t("ask")], ["parents", "🔬", t("parents")]]
       .map(function (x) { return '<a href="#/' + x[0] + '" class="' + (x[0] === tab ? "on" : "") + '"><span>' + x[1] + "</span>" + esc(x[2]) + "</a>"; }).join("");
     nav.hidden = false;
-    document.title = "Chamku — " + t("titleTag");
+    document.title = t("titleTag");
     if (!same) window.scrollTo(0, 0);
     if (tab === "search" && !same) { var q = document.getElementById("q"); if (q) q.focus(); }
     startBanners();
