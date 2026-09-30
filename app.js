@@ -346,7 +346,7 @@
   window.chamkuMore = function (id) { var s = story(id); return s ? moreList(s).map(function (x) { return x.id; }) : []; };
   window.chamkuInfo = function (id) {
     var s = story(id), b = s && D.bodies[id]; if (!b) return null;
-    return { id: id, title: L(s.title), icon: s.icon || "🌙", vid: b.video && (b.video[lang()] || b.video.en) };
+    return { id: id, title: L(s.title), titleEn: s.title.en, icon: s.icon || "🌙", vid: b.video && (b.video[lang()] || b.video.en) };
   };
   window.chamkuT = function (k) { return t(k); };
   window.chamkuRender = function () { render(true); };
