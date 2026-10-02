@@ -138,7 +138,7 @@
     var who = (S.child && S.child.name ? esc(S.child.name) + " · " : "") + (st ? esc(L(stageObj(st).ages)) : "");
     return '<header class="top"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">☰</button><a class="brand" href="#/home"><img class="avatar" src="glo-face.webp" alt="Chamku"><h1>Chamku</h1></a>' +
       '<div class="top-r">' +
-      '<button class="lang-btn" data-act="langtoggle">🌐 ' + esc(D.languages.filter(function (l) { return l.code === lang(); })[0].label) + "</button>" +
+      '<button class="lang-btn" data-act="langtoggle">🌐 ' + esc(D.languages.filter(function (l) { return l.code === (slang() || lang()); })[0].label) + "</button>" +
       '</div></header>';
   }
 
@@ -164,7 +164,8 @@
     var calm = D.stories.filter(function (s) { return s.category === "sleep" && inStage(s, st); }).slice(0, 10);
     var classics = D.stories.filter(function (s) { return s.category === "classics"; }).sort(readyFirst).slice(0, 10);
     var favs = D.stories.filter(function (s) { return isFav(s.id); });
-    return header() + circles + '<a class="searchbar" href="#/search">🔍 <span>' + t("search") + "</span></a>" + banners +
+    return header() + circles + '<a class="searchbar" href="#/search">🔍 <span>' + t("search") + "</span></a>" +
+      (slang() ? row("🌏 " + esc(LNAME[slang()].own), "#/langs/" + slang(), extraIn(slang())) : "") + banners +
       (st === "s0" ? '<div class="note">' + t("babyNote") + srcLinks([4]) + "</div>" : "") +
       row(st ? t("pickedFor", { ages: esc(L(stageObj(st).ages)) }) : t("allAges"), st ? "#/age/" + st : "#/cats", picked) +
       quads + ages +
@@ -309,6 +310,35 @@
       "<p><b>" + t("fbInt") + "</b></p>" + scale("int", "fbIntLo", "fbIntHi") +
       '<p id="fb-msg" class="small muted"></p><button type="button" class="pill wide" data-act="fbsend">' + t("fbSend") + "</button></div>";
   }
+  /* story language: Bengali / Marathi have stories but no translated menus yet */
+  var LNAME = { bn: { en: "Stories in Bengali", hi: "बंगाली में कहानियाँ", own: "বাংলা গল্প" }, mr: { en: "Stories in Marathi", hi: "मराठी में कहानियाँ", own: "मराठी गोष्टी" } };
+  function extraIn(code) { return (D.extra || []).filter(function (s) { return !code || s.lang === code; }); }
+  function slang() { try { var v = localStorage.getItem("glo.slang") || ""; return v && extraIn(v).length ? v : ""; } catch (e) { return ""; } }
+  function langChoices() { return D.languages.filter(function (l) { return l.ready || extraIn(l.code).length; }); }
+  function openLangPicker() {
+    var cur = slang() || lang();
+    sheet.innerHTML = '<div class="sheet-card"><h2>🌐 ' + t("language") + "</h2>" + langChoices().map(function (l) {
+      return '<button type="button" class="pill wide' + (l.code === cur ? "" : " ghost") + '" data-pick="' + l.code + '">' + esc(l.label) + (l.code === cur ? " ✓" : "") + "</button>";
+    }).join("") + '<button class="link" id="f-skip">' + t("back") + "</button></div>";
+    sheet.hidden = false;
+    [].forEach.call(sheet.querySelectorAll("[data-pick]"), function (b) {
+      b.addEventListener("click", function () { sheet.hidden = true; window.chamkuPickLang(b.getAttribute("data-pick")); });
+    });
+    sheet.querySelector("#f-skip").addEventListener("click", function () { sheet.hidden = true; });
+  }
+  window.chamkuPickLang = function (code) {
+    var l = D.languages.filter(function (x) { return x.code === code; })[0]; if (!l) return;
+    if (l.ready) {
+      try { localStorage.removeItem("glo.slang"); } catch (e) {}
+      S.lang = code; save("glo.lang", code);
+      if (/^#\/langs/.test(location.hash)) location.hash = "#/home"; else render(true);
+    } else {
+      try { localStorage.setItem("glo.slang", code); } catch (e) {}
+      if (location.hash === "#/langs/" + code) render(true); else location.hash = "#/langs/" + code;
+    }
+  };
+  window.chamkuLangChoices = function () { return langChoices().map(function (l) { return { code: l.code, label: l.label }; }); };
+  window.chamkuCurLang = function () { return slang() || lang(); };
   function listenMode() { try { return localStorage.getItem("glo.mode") === "listen"; } catch (e) { return false; } }
   function modeTabs() {
     var l = listenMode();
@@ -437,9 +467,7 @@
     var act = b.getAttribute("data-act");
     if (act === "menu") { if (window.ChamkuMenu) window.ChamkuMenu.open(D, lang()); return; }
     if (act === "langtoggle") {
-      var rl = D.languages.filter(function (l) { return l.ready; });
-      if (rl.length === 2) window.chamkuSetLang(rl[0].code === lang() ? rl[1].code : rl[0].code); else openSettings(false);
-      return;
+      openLangPicker(); return;
     }
     if (act === "settings") openSettings(false);
     else if (act === "night") openNight();
@@ -498,7 +526,12 @@
     else if (h.indexOf("#/parents") === 0) { html = pageParents(); tab = "parents"; }
     else if (h.indexOf("#/report") === 0) { html = '<h1 class="page-title">Story report</h1><div id="ca-report">Loading…</div>'; tab = "home"; }
     else if (h.indexOf("#/science") === 0) { html = header() + '<h1 class="page-title">🔬 ' + (lang() === "hi" ? "विज्ञान लाइब्रेरी" : "Science library") + '</h1><div id="sci-lib">Loading…</div>'; tab = "parents"; }
-    else if (h.indexOf("#/langs") === 0) { html = header() + '<h1 class="page-title">🌏 ' + t("tryLangs") + "</h1>" + grid(D.extra || []); tab = "home"; }
+    else if (h.indexOf("#/langs") === 0) {
+      var lc = h.split("/")[2] || "", ln = LNAME[lc];
+      html = header() + '<h1 class="page-title">🌏 ' + (ln ? esc(ln.own) + " · " + esc(lang() === "hi" ? ln.hi : ln.en) : t("tryLangs")) + "</h1>" +
+        '<p class="small muted" style="margin:-4px 0 10px">' + (lang() === "hi" ? "इस भाषा में और कहानियाँ आ रही हैं। बाकी सब कहानियाँ अभी Hinglish में हैं।" : "More stories in this language are coming. All other stories are in Hinglish for now.") + "</p>" +
+        grid(extraIn(ln ? lc : "")); tab = "home";
+    }
     else if (h.indexOf("#/ask") === 0) { html = '<div id="ask-root"></div>'; tab = "ask"; }
     else if (h.indexOf("#/about") === 0) { html = pageAbout(); tab = "home"; }
     else html = pageHome();

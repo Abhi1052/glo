@@ -290,7 +290,7 @@
       return '<a class="cm-item" href="#/c/' + c.id + '"><span>' + c.icon + "</span>" + esc(L(c.name)) + "</a>";
     }).join("");
     var links = [["#/home", "🏠", hiL ? "Home" : "Home"], ["#/search", "🔍", hiL ? "Search" : "Search"], ["#/favs", "♥", hiL ? "मेरी पसंद" : "Favourites"],
-      ["#/ask", "💬", hiL ? "चमकू से पूछें" : "Ask Chamku"], ["#/science", "🔬", hiL ? "विज्ञान लाइब्रेरी" : "Science library"], ["#/parents", "👪", hiL ? "माता-पिता" : "Parents"]].concat((D && (D.extra || []).length) ? [["#/langs", "🌏", hiL ? "बंगाली और मराठी कहानियाँ" : "Bengali & Marathi stories"]] : []).map(function (x) {
+      ["#/ask", "💬", hiL ? "चमकू से पूछें" : "Ask Chamku"], ["#/science", "🔬", hiL ? "विज्ञान लाइब्रेरी" : "Science library"], ["#/parents", "👪", hiL ? "माता-पिता" : "Parents"]].map(function (x) {
       return '<a class="cm-item" href="' + x[0] + '"><span>' + x[1] + "</span>" + x[2] + "</a>";
     }).join("");
     var admin = user && ADMINS.indexOf((user.email || "").toLowerCase()) >= 0 ? '<a class="cm-item" href="#/report"><span>📊</span>Story report</a>' : "";
@@ -298,15 +298,15 @@
     drawer.className = "cm-wrap";
     drawer.innerHTML = '<aside class="cm-panel" role="dialog" aria-modal="true"><div class="cm-head"><b>Chamku</b><button class="icon-btn" id="cm-x" aria-label="Close">✕</button></div>' +
       acct + '<h4>' + (hiL ? "Categories" : "Categories") + "</h4>" + cats + "<h4>" + (hiL ? "और" : "More") + "</h4>" + links + admin +
-      "<h4>" + (hiL ? "भाषा" : "Language") + '</h4><div class="cm-langs">' + (D.languages || []).filter(function (l) { return l.ready; }).map(function (l) {
-        return '<button type="button" data-l="' + l.code + '" class="' + (l.code === lang ? "on" : "") + '">' + l.label + "</button>"; }).join("") + "</div>" +
+      "<h4>" + (hiL ? "भाषा" : "Language") + '</h4><div class="cm-langs">' + (window.chamkuLangChoices ? window.chamkuLangChoices() : (D.languages || []).filter(function (l) { return l.ready; })).map(function (l) {
+        return '<button type="button" data-l="' + l.code + '" class="' + (l.code === (window.chamkuCurLang ? window.chamkuCurLang() : lang) ? "on" : "") + '">' + l.label + "</button>"; }).join("") + "</div>" +
       '<button class="cm-item" id="cm-set" type="button"><span>🧒</span>' + kidText() + "</button>" +
       '<a class="cm-item" href="privacy.html"><span>🔒</span>Privacy</a></aside>';
     document.body.appendChild(drawer);
     drawer.addEventListener("click", function (e) { if (e.target === drawer || e.target.closest("a.cm-item")) closeMenu(); });
     drawer.querySelector("#cm-x").onclick = closeMenu;
     [].forEach.call(drawer.querySelectorAll(".cm-langs button"), function (b) {
-      b.onclick = function () { closeMenu(); if (window.chamkuSetLang) window.chamkuSetLang(b.getAttribute("data-l")); };
+      b.onclick = function () { closeMenu(); if (window.chamkuPickLang) window.chamkuPickLang(b.getAttribute("data-l")); else if (window.chamkuSetLang) window.chamkuSetLang(b.getAttribute("data-l")); };
     });
     drawer.querySelector("#cm-set").onclick = function () { closeMenu(); if (window.chamkuOpenSettings) window.chamkuOpenSettings(); };
     var bi = drawer.querySelector("#cm-in");
