@@ -21,7 +21,7 @@
       builds: "Builds", why: "Why this helps", sources: "Sources", sample: "Meanwhile, watch our sample story",
       back: "← Back", talk: "Talk together",
       addChild: "Child's name & age", titleTag: "Chamku the Storyteller",
-      watched: "Watched", tryLangs: "New: stories in Bengali & Marathi", mWatch: "Watch", mListen: "Listen only", mAlbum: "Bedtime stories", moreStories: "More stories →",
+      watched: "Watched", tryLangs: "Stories in Bengali & Marathi", mWatch: "Watch", mListen: "Listen only", mAlbum: "Bedtime stories", moreStories: "More stories →",
       listenNote: "You can lock the phone — the story keeps playing. Pause it or skip to the next story from the lock screen.",
       watchNote: "Chamku tells this story. He says hello, then shrinks to a tiny light, and the screen stays almost dark for the rest of the story — so it helps your child sleep instead of waking them up.",
       videoSoon: "Chamku's video for this story is being made.", script: "Read the story script (for testing)",
@@ -47,7 +47,7 @@
       builds: "क्या सिखाती है", why: "ये क्यों मदद करता है", sources: "स्रोत", sample: "तब तक हमारी नमूना कहानी देखिए",
       back: "← वापस", talk: "साथ में बात करें",
       addChild: "बच्चे का नाम और उम्र", titleTag: "कहानी सुनाने वाला चमकू",
-      watched: "देख ली", tryLangs: "नया: बंगाली और मराठी में कहानियाँ", mWatch: "देखें", mListen: "सिर्फ़ सुनें", mAlbum: "सोने की कहानियाँ", moreStories: "और कहानियाँ →",
+      watched: "देख ली", tryLangs: "बंगाली और मराठी में कहानियाँ", mWatch: "देखें", mListen: "सिर्फ़ सुनें", mAlbum: "सोने की कहानियाँ", moreStories: "और कहानियाँ →",
       listenNote: "फ़ोन lock कर सकते हैं — कहानी चलती रहेगी। Lock screen से रोक सकते हैं या अगली कहानी चला सकते हैं।",
       watchNote: "ये कहानी चमकू सुनाता है। वो नमस्ते कहता है, फिर एक नन्ही-सी रोशनी बन जाता है, और बाकी कहानी में स्क्रीन लगभग अँधेरी रहती है — ताकि बच्चा जागे नहीं, सो जाए।",
       videoSoon: "इस कहानी का चमकू वाला वीडियो बन रहा है।", script: "कहानी की स्क्रिप्ट पढ़ें (टेस्टिंग के लिए)",
@@ -164,8 +164,7 @@
     var calm = D.stories.filter(function (s) { return s.category === "sleep" && inStage(s, st); }).slice(0, 10);
     var classics = D.stories.filter(function (s) { return s.category === "classics"; }).sort(readyFirst).slice(0, 10);
     var favs = D.stories.filter(function (s) { return isFav(s.id); });
-    return header() + circles + '<a class="searchbar" href="#/search">🔍 <span>' + t("search") + "</span></a>" +
-      ((D.extra || []).length ? row("🌏 " + t("tryLangs"), "", D.extra) : "") + banners +
+    return header() + circles + '<a class="searchbar" href="#/search">🔍 <span>' + t("search") + "</span></a>" + banners +
       (st === "s0" ? '<div class="note">' + t("babyNote") + srcLinks([4]) + "</div>" : "") +
       row(st ? t("pickedFor", { ages: esc(L(stageObj(st).ages)) }) : t("allAges"), st ? "#/age/" + st : "#/cats", picked) +
       quads + ages +
@@ -499,6 +498,7 @@
     else if (h.indexOf("#/parents") === 0) { html = pageParents(); tab = "parents"; }
     else if (h.indexOf("#/report") === 0) { html = '<h1 class="page-title">Story report</h1><div id="ca-report">Loading…</div>'; tab = "home"; }
     else if (h.indexOf("#/science") === 0) { html = header() + '<h1 class="page-title">🔬 ' + (lang() === "hi" ? "विज्ञान लाइब्रेरी" : "Science library") + '</h1><div id="sci-lib">Loading…</div>'; tab = "parents"; }
+    else if (h.indexOf("#/langs") === 0) { html = header() + '<h1 class="page-title">🌏 ' + t("tryLangs") + "</h1>" + grid(D.extra || []); tab = "home"; }
     else if (h.indexOf("#/ask") === 0) { html = '<div id="ask-root"></div>'; tab = "ask"; }
     else if (h.indexOf("#/about") === 0) { html = pageAbout(); tab = "home"; }
     else html = pageHome();

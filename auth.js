@@ -290,7 +290,7 @@
       return '<a class="cm-item" href="#/c/' + c.id + '"><span>' + c.icon + "</span>" + esc(L(c.name)) + "</a>";
     }).join("");
     var links = [["#/home", "🏠", hiL ? "Home" : "Home"], ["#/search", "🔍", hiL ? "Search" : "Search"], ["#/favs", "♥", hiL ? "मेरी पसंद" : "Favourites"],
-      ["#/ask", "💬", hiL ? "चमकू से पूछें" : "Ask Chamku"], ["#/science", "🔬", hiL ? "विज्ञान लाइब्रेरी" : "Science library"], ["#/parents", "👪", hiL ? "माता-पिता" : "Parents"]].map(function (x) {
+      ["#/ask", "💬", hiL ? "चमकू से पूछें" : "Ask Chamku"], ["#/science", "🔬", hiL ? "विज्ञान लाइब्रेरी" : "Science library"], ["#/parents", "👪", hiL ? "माता-पिता" : "Parents"]].concat((D && (D.extra || []).length) ? [["#/langs", "🌏", hiL ? "बंगाली और मराठी कहानियाँ" : "Bengali & Marathi stories"]] : []).map(function (x) {
       return '<a class="cm-item" href="' + x[0] + '"><span>' + x[1] + "</span>" + x[2] + "</a>";
     }).join("");
     var admin = user && ADMINS.indexOf((user.email || "").toLowerCase()) >= 0 ? '<a class="cm-item" href="#/report"><span>📊</span>Story report</a>' : "";
